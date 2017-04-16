@@ -1,0 +1,78 @@
+	%% Canonical categories
+	% Relevant for Conceptual Spaces
+		\newcommand{\catname}[1]{\ensuremath{{\bf #1}}}
+		\newcommand{\SetCategory}{\catname{Set}\xspace} % Category of sets
+		\newcommand{\PshCategory}[1]{\ensuremath{\SetCategory^{\OpCategory{\mathcal{#1}}}}\xspace} % Presheaves on #1
+		\newcommand{\LinRelCategory}{\catname{LinRel}\xspace} %Category of linear relations		
+		\newcommand{\fdVecRealCategory}{\ensuremath{\catname{fdVect}_\reals} \xspace} % Category of finite-dimensional vector spaces on the Reals
+		\newcommand{\RelCategory}{\catname{Rel}\xspace} % Category of sets and relations
+		\newcommand{\ConvexrelCategory}{\catname{ConvexRel}\xspace} % Category of Conceptual Spaces and Convex Relations
+		\newcommand{\ConvexCategory}{\catname{Convex}\xspace} % Category of Conceptual Spaces and Convex functions
+		\newcommand{\RelqCategory}[1]{\ensuremath{\catname{Rel}(#1)}\xspace} % Category of Q-relations
+		\newcommand{\SpanqCategory}[1]{\ensuremath{\catname{Span}(#1)}\xspace} % Category of Q-spans
+		\newcommand{\RelvqCategory}[2]{\ensuremath{\catname{Rel}_{#1}(#2)}\xspace} % Category of Algebraic Q-relations
+		\newcommand{\SpanvqCategory}[2]{\ensuremath{\catname{Span}_{#1}(#2)}\xspace} % Category of Algebraic Q-spans		
+		\newcommand{\RelvtqCategory}[3]{\ensuremath{\catname{Rel}^{#1}_{#2}(#3)}\xspace} % Category of Algebraic Q-relations over arbitrary topos
+		\newcommand{\SpanvtqCategory}[3]{\ensuremath{\catname{Span}^{#1}_{#2}(#3)}\xspace} % Category of Algebraic Q-spans  over arbitrary topos
+		\newcommand{\SigmaalgCategory}[2]{\ensuremath{\catname{Alg}(#1,#2)}\xspace} % Category of Algebras
+		\newcommand{\SigmaalgCategoryt}[3]{\ensuremath{\catname{Alg}^{#1}(#2,#3)}\xspace} % Category of internal Algebras in a topos
+		
+		\newcommand{\RelvqCategoryex}[3]{\ensuremath{\catname{Rel}^{\operatorname{#3}}_{#1}(#2)}\xspace}
+		\newcommand{\RelvqlinCategory}[2]{\RelvqCategoryex{#1}{#2}{lin}} % Linear relations
+		\newcommand{\RelvqaffCategory}[2]{\RelvqCategoryex{#1}{#2}{aff}} % Affine relations
+		\newcommand{\RelvqrelCategory}[2]{\RelvqCategoryex{#1}{#2}{rel}} % Relevant relations
+		\newcommand{\RelvqcartCategory}[2]{\RelvqCategoryex{#1}{#2}{cart}} % Cartesian relations
+		\newcommand{\RelvtqlinCategory}[3]{\RelvqCategoryex{#2}{#3}{lin, #1}} % Linear relation in topos
+		
+		\newcommand{\SpanvqCategoryex}[3]{\ensuremath{\catname{Span}^{\operatorname{#3}}_{#1}(#2)}\xspace}
+		\newcommand{\SpanvqlinCategory}[2]{\SpanvqCategoryex{#1}{#2}{lin}} % Linear spans
+		\newcommand{\SpanvqaffCategory}[2]{\SpanvqCategoryex{#1}{#2}{aff}} % Affine spans
+		\newcommand{\SpanvqrelCategory}[2]{\SpanvqCategoryex{#1}{#2}{rel}} % Relevant spans
+		\newcommand{\SpanvqcartCategory}[2]{\SpanvqCategoryex{#1}{#2}{cart}} % Cartesian spans
+		\newcommand{\SpanvtqlinCategory}[3]{\SpanvqCategoryex{#2}{#3}{lin, #1}} % Linear spans in topos
+		
+	% Enrichments
+		\newcommand{\PreordCategory}{\catname{Preord}\xspace} % Preorder enrichment
+		\newcommand{\PosCategory}{\catname{Pos}\xspace} % Partial order enrichment
+			
+	% Others
+		\newcommand{\DiffCategory}{\catname{Diff}\xspace} % Category of differentiable manifolds
+		\newcommand{\TopCategory}{\catname{Top}\xspace} % Category of topological spaces
+
+		\newcommand{\CatCategory}{\catname{Cat}\xspace} % Category of small categories
+		\newcommand{\SitesCategory}{\catname{Sites}\xspace} % Category of small sites
+
+		\newcommand{\GrpCategory}{\catname{Grp}\xspace} % Category of groups
+		\newcommand{\fGrpCategory}{\catname{fGrp}\xspace} % Category of finite groups
+		\newcommand{\AbCategory}{\catname{Ab}\xspace} % Category of abelian groups
+		\newcommand{\fAbCategory}{\catname{fAb}\xspace} % Category of finite abelian groups
+		\newcommand{\fMonCategory}{\catname{fMon}\xspace} % Category of finite monoids
+		\newcommand{\fComMonCategory}{\catname{fCommMon}\xspace} % Category of finite commutative monoids
+		\newcommand{\fRfreeModCategory}[1]{\ensuremath{#1\catname{-Mod}_{fd}^{free}}} % Category of finite-dimensional free R-modules (R field, ring, semiring...)
+		\newcommand{\fRModCategory}[1]{\ensuremath{#1\catname{-Mod}_{fd}}} % Category of finite-dimensional R-modules (R field, ring, semiring...)
+		\newcommand{\RModCategory}[1]{\ensuremath{#1\catname{-Mod}}} % Category of R-modules (R field, ring, semiring...)
+
+		\newcommand{\HilbCategory}{\catname{Hilb}\xspace} % Category of Hilbert spaces
+		\newcommand{\sHilbCategory}{\catname{sHilb}\xspace} % Category of Hilbert spaces
+		\newcommand{\fdHilbCategory}{\catname{fdHilb}\xspace} % Category of finite-dimensional Hilbert spaces
+		\newcommand{\fdSubIsomsCategory}{\catname{fdSubIsoms}\xspace} % Category of finite-dimensional Hilbert spaces
+		\newcommand{\fdCPSUCategory}{\catname{fdCPSU}\xspace} % Category of finite-dimensional Hilbert Spaces and Completely Positive Sub-Unital maps
+		\newcommand{\PInjCategory}{\catname{PInj}\xspace} % Category of sets and partial injections
+		\newcommand{\fRelCategory}{\catname{fRel}\xspace} % Category of finite sets and relations
+		\newcommand{\fRelPTEP}{\catname{fRel}\xspace} % Process theory with environments and purification of finite sets and relations
+		\newcommand{\fPInjCategory}{\catname{fPInj}\xspace} % Category of finite sets and partial injections
+		\newcommand{\fBijCategory}{\catname{fBij}\xspace} % Category of finite sets and bijections
+		\newcommand{\fInjCategory}{\catname{fInj}\xspace} % Category of finite sets and injections
+		\newcommand{\fPFunCategory}{\catname{fPFun}\xspace} % Category of finite sets and partial functions
+		\newcommand{\fPFunPTEP}{\catname{fPFun}\xspace} % Process theory with environments and purification of finite sets and partial functions
+		\newcommand{\fFunCategory}{\catname{fFun}\xspace} % Category of finite sets and total functions
+		\newcommand{\fFunPTEP}{\catname{fFun}\xspace} % Process theory with environments and purification of finite sets and total functions
+		\newcommand{\fStochCategory}{\catname{fStoch}\xspace} % Category of finite sets and stochastic maps
+		\newcommand{\starHilbCategory}{\ensuremath{^\star\!\HilbCategory}} % Category of omega-truncated non-standard hilbert spaces
+
+
+	%% General-purpose category names
+		\newcommand{\CategoryC}{\ensuremath{\mathcal{C}}\xspace}
+		\newcommand{\CategoryD}{\ensuremath{\mathcal{D}}\xspace}
+		\newcommand{\PshCCategory}{\ensuremath{\catname{Set}^{\mathcal{C}^{op}}}\xspace}
+		\newcommand{\PshDCategory}{\ensuremath{\catname{Set}^{\mathcal{D}^{op}}}\xspace}
