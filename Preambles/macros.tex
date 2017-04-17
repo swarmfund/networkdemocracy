@@ -10,7 +10,7 @@
 
 
 %% General 
-	\input{Submodules/Theorem Environments} % Defines theorems notations
+	\subimport{Submodules}{Theorem Environments} % Defines theorems notations
 	
 	\newcommand{\emptyArg}{\,\underline{\hspace{6px}}\,} % Underscore for omitted, anonymous arguments
 	\newcommand{\inlineQuote}[1]{\textquotedblleft #1\textquotedblright} % Left-right quotes surrounding #1
@@ -31,11 +31,11 @@
 
 
 %% Here you call all the submodules you may need:
-\input{Submodules/Category Theory}
-%\input{Submodules/Coarse Graining and Sheaf Theory}
-\input{Submodules/Conceptual Spaces}
-\input{Submodules/Inline Notation for CQM}
-%\input{Submodules/Lattice Theory}
-%\input{Submodules/Modadic Dynamics}
-\input{Submodules/Set Theory}
-%\input{Submodules/Topology and Linear Algebra}
+\subimport{Submodules}{Category Theory}
+%\subimport{Submodules}{Coarse Graining and Sheaf Theory}
+\subimport{Submodules}{Conceptual Spaces}
+\subimport{Submodules}{Inline Notation for CQM}
+%\subimport{Submodules}{Lattice Theory}
+%\subimport{Submodules}{Modadic Dynamics}
+\subimport{Submodules}{Set Theory}
+%\subimport{Submodules}{Topology and Linear Algebra}
