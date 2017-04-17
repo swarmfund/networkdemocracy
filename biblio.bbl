@@ -1,0 +1,95 @@
+\begin{thebibliography}{10}
+\providecommand{\bibitemdeclare}[2]{}
+\providecommand{\surnamestart}{}
+\providecommand{\surnameend}{}
+\providecommand{\urlprefix}{Available at }
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\href}[2]{\texttt{#2}}
+\providecommand{\urlalt}[2]{\href{#1}{#2}}
+\providecommand{\doi}[1]{doi:\urlalt{http://dx.doi.org/#1}{#1}}
+\providecommand{\bibinfo}[2]{#2}
+
+\bibitemdeclare{article}{abramsky2004categorical}
+\bibitem{abramsky2009categorical}
+\bibinfo{author}{Samson \surnamestart Abramsky\surnameend} \&
+  \bibinfo{author}{Bob \surnamestart Coecke\surnameend} (\bibinfo{year}{2004}):
+  \emph{\bibinfo{title}{A categorical semantics of quantum protocols}}.
+\newblock {\sl \bibinfo{journal}{LiCS'04}},
+  \doi{10.1109/LICS.2004.1319636}.
+
+\bibitemdeclare{article}{abramsky2012hstaralgebras}
+\bibitem{abramsky2012hstaralgebras}
+\bibinfo{author}{Samson \surnamestart Abramsky\surnameend} \&
+  \bibinfo{author}{Chris \surnamestart Heunen\surnameend}
+  (\bibinfo{year}{2012}): \emph{\bibinfo{title}{H*-algebras and nonunital
+  Frobenius algebras: first steps in infinite-dimensional categorical quantum
+  mechanics}}.
+\newblock {\sl \bibinfo{journal}{Proceedings of Symposia in Applied Mathematics}},
+  \doi{10.1090/psapm/071/599}.
+
+\bibitemdeclare{article}{ambrose1945structure}
+\bibitem{ambrose1945structure}
+\bibinfo{author}{Warren \surnamestart Ambrose\surnameend}
+  (\bibinfo{year}{1945}): \emph{\bibinfo{title}{Structure theorems for a
+  special class of Banach algebras}}.
+\newblock {\sl \bibinfo{journal}{Transactions of the American Mathematical
+  Society}},
+  \doi{10.1090/S0002-9947-1945-0013235-8}.
+
+\bibitemdeclare{article}{coecke2011interacting}
+\bibitem{coecke2011interacting}
+\bibinfo{author}{Bob \surnamestart Coecke\surnameend} \& \bibinfo{author}{Ross
+  \surnamestart Duncan\surnameend} (\bibinfo{year}{2011}):
+  \emph{\bibinfo{title}{Interacting quantum observables: categorical algebra
+  and diagrammatics}}.
+\newblock {\sl \bibinfo{journal}{New Journal of Physics}},
+  \doi{10.1088/1367-2630/13/4/043016}.
+
+\bibitemdeclare{article}{coecke2008classical}
+\bibitem{coecke2008classical}
+\bibinfo{author}{Bob \surnamestart Coecke\surnameend},
+  \bibinfo{author}{Eric~Oliver \surnamestart Paquette\surnameend} \&
+  \bibinfo{author}{Dusko \surnamestart Pavlovic\surnameend}
+  (\bibinfo{year}{2008}): \emph{\bibinfo{title}{Classical and quantum
+  structuralism}}.
+\newblock {\sl \bibinfo{journal}{Semantic techniques for quantum computation}},
+  \doi{10.1017/CBO9781139193313.003}.
+
+\bibitemdeclare{article}{Farrukh1975application}
+\bibitem{Farrukh1975application}
+\bibinfo{author}{M.~O. \surnamestart Farrukh\surnameend}
+  (\bibinfo{year}{1975}): \emph{\bibinfo{title}{Application of nonstandard
+  analysis to quantum mechanics}}.
+\newblock {\sl \bibinfo{journal}{Journal of Mathematical Physics}},
+  \doi{10.1063/1.522525}.
+
+\bibitemdeclare{article}{gogioso2015categorical}
+\bibitem{gogioso2015categorical}
+\bibinfo{author}{Stefano \surnamestart Gogioso\surnameend}
+  (\bibinfo{year}{2015}): \emph{\bibinfo{title}{{Categorical semantics for
+  Schr\"{o}dinger's equation}}}.
+\newblock {\sl \bibinfo{journal}{In QPL 2015, \href{https://arxiv.org/abs/1501.06489}{arXiv:1501.06489}}}.
+
+\bibitemdeclare{phdthesis}{kissinger2012pictures}
+\bibitem{kissinger2012pictures}
+\bibinfo{author}{Aleks \surnamestart Kissinger\surnameend}
+  (\bibinfo{year}{2012}): \emph{\bibinfo{title}{Pictures of processes:
+  automated graph rewriting for monoidal categories and applications to quantum
+  computing}}.
+\newblock Ph.D. thesis.
+
+\bibitemdeclare{article}{ozawa1993unitary}
+\bibitem{ozawa1993unitary}
+\bibinfo{author}{Izumi \surnamestart Ojima\surnameend} \& \bibinfo{author}{Masanao
+  \surnamestart Ozawa\surnameend} (\bibinfo{year}{1993}):
+  \emph{\bibinfo{title}{Unitary representations of the hyperfinite Heisenberg group and the logical extension methods in physics}}.
+\newblock {\sl \bibinfo{journal}{Open Systems and Information Dynamics}},
+  \doi{10.1007/BF02228975}.
+
+\bibitemdeclare{book}{robinson1974nonstandard}
+\bibitem{robinson1974nonstandard}
+\bibinfo{author}{Abraham \surnamestart Robinson\surnameend}
+  (\bibinfo{year}{1974}): \emph{\bibinfo{title}{Non-standard analysis}}.
+\newblock \bibinfo{publisher}{Princeton University Press}.
+
+\end{thebibliography}

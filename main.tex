@@ -1,0 +1,392 @@
+\documentclass[adraft, copyright,creativecommons,sharealike,noncommercial]{Preambles/eptcs}
+
+
+\input{Preambles/packages}
+\input{Preambles/macros}
+\input{Preambles/tikzstyles}
+
+\newcommand{\generalisedPowerset}[2]{\mathcal{P}_{#1}[#2]}
+\newcommand{\stdpart}[1]{\operatorname{st}(#1)}
+\newcommand{\nstar}{{^*}}
+\newcommand{\indexSet}[1]{\{1,...,\dim{#1}\}}
+\newcommand{\truncate}[1]{\bar{#1}}
+\newcommand{\starHilbCategoryNearStd}{\starHilbCategory^{(std)}}
+\newcommand{\vartruncate}[1]{\operatorname{trunc}[#1]}
+
+\setcounter{tocdepth}{2}
+%\setlength{\parindent}{0pt}
+
+\title{The way of the Infinitesimal: }
+\author{
+	Fabrizio Genovese
+	\institute{Quantum Group \\ University of Oxford}
+	\email{fabrizio.genovese@hertford.ox.ac.uk}
+}
+\def\titlerunning{TBD}
+\def\authorrunning{F. Genovese}
+
+
+\begin{document}
+
+\bibliographystyle{eptcs}
+
+\maketitle
+
+
+\begin{abstract}
+In this document we provide a brief introduction to Non-Standard Analysis, with Categorical Quantum Mechanics in mind as application. Nevertheless, we are convinced this document will be helpful for everyone wanting to learn how to practically use Non-Standard Analysis without having to go too deep into the logical and model-theoretical complications of the subject. Our goal is to give the reader the necessary confidence to manipulate infinities, infinitesimals and the standard constructions, to employ Non-Standard Analysis as an everyday tool in scientific research.
+
+This document is heavily based on ``Lectures on the Hyperreals'' by Goldblatt, that has to be credited for having given one of the simplest and friendliest explanations of the subject so far.
+\end{abstract}
+
+\section{Introduction} 
+When we think about limits, derivatives and other constructions commonly employed in calculus we often do it in intuitive terms. We manipulate ``$dx$'', ``$dy$'' and the like as they were algebraic objects, with ease. Nevertheless, when it comes to formalize these entities mathematically the definition usually employed is the one \emph{\`a la Cauchy}: derivatives and limits become analytic constructions relying on the mantra ``the more you go further, the more this quantity will get near to this other one''. As an instance, take the usual undergrad textbook definition of limit for a succession, originally given by Weierstrass:
+\begin{equation*}
+	\lim_{n \to \infty} s_n = l \iffdef \forall \epsilon > 0, \, \exists n_0: \, \forall n \geq n_0, \, |l - s_n| \leq \epsilon
+\end{equation*}
+We all know what this definition tries to capture: It does not matter how small $\epsilon$ is, for every $\epsilon$ you pick at some point the distance between $s_n$ and $l$ will constantly be less than $\epsilon$, and hence we can say that $s_n$ gets ``closer and closer'' to $l$. We would be tempted to say, then, that $s_n$ becomes \emph{infinitesimally close to $l$} but we can't, since we have no notion of what ``infinitesimal'' really means: This concept has to be relegated to our intuition. In the practice, this means that one has to deal with a lot of ugly inequalities, moving out from the comfortable and reassuring world of pure algebra. (I'm pretty sure this is the main reason why people that hate calculus hate calculus.)
+
+Definitions such the one above work nicely for a plethora of applications, and this is clearly proved by the fact that calculus is probably the most popular tool in the history of Science. Nevertheless, not having any way to explicitly talk about infinities and infinitesimals becomes a problem when, say, one has to work with \emph{compositional features} of a model. 
+
+To better explain this, we consider an example from Categorical Quantum Mechanics (abbreviated CQM). In this framework there are some very important tools that are called $\emph{Frobenius algebras}$. It is not important at this point to know what they do or why they are useful, what is important is that, in a Hilbert space $\mathbb{H}$, to have Frobenius algebras the sum $\sum_1^n \bra{e_i}$ has to be part of $\mathcal{H}$, where $n$ is its and $\ket{e_i}$ are vectors of an orthonormal basis. Obviously using the standard definition of sum and limits this object does not belong to $\mathcal{H}$ unless its dimension is finite (that sum is divergent), and this is a problem that essentially relegated CQM to the study of finite-dimensional quantum mechanics for long time. Similarly, in physics one manipulates all the time objects such as Dirac deltas and plain waves on spaces like $L^2[\mathbb{R}]$ or $L^2[\mathbb{C}]$. Again, it doesn't matter to know what Dirac deltas and plain waves are: The problem here is that they are not elements of $L^2[\mathbb{R}]$ or $L^2[\mathbb{C}]$, and this poses serious limitations when one wants to capture the compositional behaviour of physical systems using category theory.
+
+The solution to this problem comes from Non-Standard Analysis, and our plan is more or less this: We want to extend the real numbers (or the complex numbers, or $L^2[\mathbb{R}]$, whatever) including infinities and infinitesimals. In this way entities like the diverging sum above become well-defined algebraic objects with their own dignity, and we can formalize our constructions (as in the CQM case) on these extended versions of our spaces. This construction will be explained in detail in the next section.
+
+This is clearly not enough: We want to be able to control our extension. This means that we want clear and sharp answers to questions like ``If $T$ is a theorem in some environment, do I know when it is also a theorem in the environment extension, and vice-versa?'' Satisfaction of this requirement allows us to go back and forth from the extension to the original environment, and is ultimately what characterizes our extension construction as meaningful, making us able to regard it as ``my original environment plus algebraic entities that represent infinities and infinitesimals, entities that I can manipulate exactly as my intuition would suggest''. The piece of machinery that puts us in control, attaining exactly what we wanted to do here, is called \emph{transfer theorem}, and it will be explained in detail in section []. 
+
+In the last section we will put all this machinery into good use. We will take a lot of textbook examples \`a la Cauchy and we will re-express them ``\`a la Robinson'', that is, using non-standard formalism. This will hopefully give the practicing scientist in need of an algebraic formalization of calculus enough confidence to wander in the beautiful world of Non-Standard Analysis as he pleases.
+
+As already mentioned in the abstract, we owe a lot to Robinson[], the father of Non-Standard Analysis itself, and to Goldblatt[], that was able to explain the subject in a very simple and intuitive way. In particular, this document can be considered a recap of his book ``Lectures on the Hyperreals'', to which we redirect the reader that wants to know more.
+
+The original book by Robinson[] is, perhaps, still the Bible of Non-Standard Analysis: Countless non-standard formalisations of interesting mathematical structures can be found there, from Hilbert Spaces to Differential Geometry, and we redirect the reader to that beautiful world of wonders in case more in-dept information is needed.
+
+\section{The construction of $\nstar \reals$}
+In logic there is a very famous theorem called \emph{compactness theorem}. What it says goes more or less like this: If $\Sigma$ is a set of statements such that every finite subset $\Sigma'$ of $\Sigma$ has a model (that is, some mathematical structure in which all the statements in $\Sigma'$ are true), then $\Sigma$ has a model itself. Now, suppose that $\Sigma$ is the set of all statements that are true for real numbers, plus the statements
+\begin{equation*}
+	0 < \epsilon,\quad \epsilon < 1,\quad \epsilon < \frac{1}{2}, \quad \epsilon < \frac{1}{3}, \quad, \dots
+\end{equation*}
+Using the compactness theorem we can infer that $\Sigma$ has a model, call it $\nstar \reals$, that will be an ordered field in which the element $\epsilon$ is an infinitesimal, that is, something greater than zero but smaller than any real number. We also get that statements in $\nstar \reals$ ``formulated in the right way'' will hold if and only if they hold in $\reals$. This last sentence has been intentionally expressed in a murky way, and one of the objectives of this document is to understand what it precisely means.
+
+Albeit the compactness theorem is what makes non-standard analysis ultimately work, extending the real numbers using this approach has a great disadvantage: We get a model of the reals containing infinities and infinitesimals, but in a non-constructive way. What we will do, instead, is to \emph{constructively build} the extended real numbers $\nstar \reals$, using mathematical tools called \emph{ultraproducts}. The experienced logician will be aware that, in practice, what we will do amounts to re-proving the compactness theorem in a more specialized setting that suits our need. But in order to proceed with this construction, we have to figure out first what real numbers really are.
+
+\subsection{Structure of $\reals$}
+
+There are many definitions of real numbers, all equivalent. We here state some of them, with which the reader may be familiar:
+\begin{itemize}
+	\item A real number is something that can be expressed as an infinite decimal expression. As an instance,
+	\begin{equation*}
+		\pi = 3.141592\dots
+	\end{equation*}
+	The set of all such numbers is called $\reals$.
+	
+	\item A real number is a set of a field $\reals$ that is:
+	\begin{itemize}
+		\item Ordered, meaning that there is an order relation $\leq$ compatible with the field operations of $\reals$;
+		\item Complete, meaning that every non-empty set $S \subseteq \reals$ with an upper bound\footnote{An upper bound for $S \subseteq \reals$ is an $x \in \reals$ such that for all $s \in S$ it is $s \leq x$.} has a supremum\footnote{This means that the set of the upper bounds of $S$ has a minimum.}.
+	\end{itemize}
+	 This notion identifies $\reals$ uniquely since it can be shown that two ordered complete fields are always isomorphic.
+	 
+	 \item Given a sequence $p_1, p_2, \dots, p_n, \dots$, we say that it is a \emph{Cauchy sequence} if $\lim_{i,j \to \infty} | p_i - p_j | = 0$. This is nothing more than the usual definition of Cauchy sequence seen in undergrad calculus. Now consider the set of all the Cauchy sequences of rational numbers (call it $\overline{\rationals}$), that is, all the Cauchy sequences in which $p_i \in \rationals$ for every $i$. 
+	 
+	 Given two sequences $p_1, p_2, \dots, p_n, \dots$, $s_1, s_2, \dots, s_n, \dots$, we say that they are \emph{equivalent} if
+	 \begin{equation*}
+	 	\lim_{n \to \infty} |p_n - s_n | = 0
+	 \end{equation*}
+	 meaning that two sequences are equivalent if they approach the same limit. It can be shown that the definition above is an equivalence relation on $\overline{\rationals}$. The equivalence classes of this relation can be endowed with an ordered field structure that is complete, and this again characterizes $\reals$ since we already said that two complete ordered fields are isomorphic.
+	 
+	 Note that in this approach two equivalent Cauchy sequences define the same real number.
+ \end{itemize}
+As we already mentioned, it can be proved that all the definitions above are equivalent, but the reader can already appreciate some differences: The third one is constructive, while the second one is not. We will extend $\reals$ with infinities and infinitesimals following steps similar to the ones in third construction, starting with sequences of real numbers and quotienting them in an opportune way. The next section is about finding what this opportune way is.
+
+\subsection{Comparing Sequences}
+In the last subsection we said that we begin our construction considering sequences of real numbers. If $r$ is a sequence, we will indicate with $r_n$ the $n$-th element of the sequence, that is of course just a real number.
+
+Given two sequences $r, s$, we want to find some criterion to compare them. Intuitively, one way to go is to say that $r, s$ are equivalent if they agree on a \emph{large number} of elements, that is, if the set
+\begin{equation*}
+	E_{r,s} := \suchthat{n \in \naturals}{r_n = s_n}
+\end{equation*}
+is \emph{large}, whatever this means. Since we want this notion of equivalence to define an equivalence relation, we can already state some properties we want this notion of bigness to have:
+\begin{itemize}
+	\item $\naturals$ has to be large, this is because our equivalence relation has to be reflexive, and clearly $E_{r,r} = \naturals$;
+	\item Equivalence relations are transitive. This means that if $E_{r,s}$ and $E_{s,k}$ are large, also $E_{r,k}$ has to be large. But $E_{r,k}$ is contained in $E_{r,s} \cap E_{s,k}$, and hence the property we are looking for is 
+	\begin{center}
+		If $A, B$ are large and $A \cap B \subseteq C$, then $C$ is large.
+	\end{center}
+	In particular this means that the set of large sets is closed for intersection and supersets, meaning that
+	\begin{center}
+		If $A,B$ are large and $A \subseteq C$, then $A \cap B$ and $C$ are large. 
+	\end{center} 
+	\item $\emptyset$ cannot be large: Every other set $K \subset \naturals$ has the property $\emptyset \subseteq K$, so if $\emptyset$ were to be large every subset of $\naturals$ would be large, making our equivalence relation trivial.
+\end{itemize}
+\begin{remark}
+	The first notion of largeness that comes to mind is to say that a set $L$ is large if it is \emph{cofinite}, meaning that its complement $\naturals - L$ is a finite set. Unfortunately this notion does not work well: What we want ultimately do is to take our extension of the real numbers to be the sequences of reals quotiented by the equivalence relation we are defining. Moreover we want this extension to be \emph{totally ordered}, meaning that given two equivalence classes of sequences $r,s$ it is always $[r] < [s]$, $[l] = [s]$ or $[l] > [s]$. The natural way to say that $[r]$ is less than a sequence $[s]$ is to require that the set\footnote{Obviously we have to check that this definition is independent of the representatives of $[r], [s]$, but this is an easy exercise.}
+	\begin{equation*}
+		L_{r,s} : = \suchthat{n \in \naturals}{r_n < s_n}
+	\end{equation*}
+	is large. Now consider the sequences $r = (1,0,1,0, \dots), s=(0,1,0,1,\dots)$. Clearly $E_{r,s} = \emptyset$, so these two sequences are not identified by our relation, and we should be able to say $[r] < [s]$ or $[r] > [s]$. But both $L_{r,s}, L_{s,r}$ are not cofinite, and so we are not able to compare $[r],[s]$ if we take cofiniteness as a definition of large. 
+\end{remark}
+	From this remark we deduce that we have to impose an extra requirement, namely that
+	\begin{center}
+		Given a set $A$, either $A$ or $\naturals - A$ is large.
+	\end{center}
+	We can immediately infer that if we require this $A$ and $\naturals - A$ cannot be both large, otherwise $A \cap \naturals - A = \emptyset$ would be large as well.
+	
+	The experienced reader will already have note that our requirements to define what largeness is match the definition of \emph{ultrafilter}. This is indeed the tool we are going to use.
+	
+	\subsection{Ultrafilters}
+	After the discussion in the last section we are able to formally state what we want.
+	\begin{definition}
+		Let $I$ be a nonempty set, and denote with $\Powerset{I}$ its powerset (the set of all subsets of $I$). A \emph{filter} on $I$ is a nonempty collection $\mathcal{F}$ of subsets of $I$ (that is, an $\mathcal{F} \subseteq \Powerset{I}$) such that
+		\begin{itemize}
+			\item If $A, B \in \mathcal{F}$, then $A \cap B \in \mathcal{F}$ ($\mathcal{F}$ is closed with respect to intersections);
+			
+			\item If $A \in \mathcal{F}$ and $A \subseteq B \subseteq I$, then $B \in \mathcal{F}$ ($\mathcal{F}$ is closed with respect to supersets).
+		\end{itemize}
+	Moreover, a filter $\mathcal{F}$ is called \emph{ultrafilter} if it satisfies the additional condition
+	\begin{center}
+		For any $A \subseteq I$, it is $A \in \mathcal{F}$ or $I-A \in \mathcal{F}$.
+	\end{center}
+	Note that a filter containing $\emptyset$ coincides with $\Powerset{I}$. Thus, we call $\mathcal{F}$ \emph{proper} if $\emptyset \not\in \mathcal{F}$.
+	\end{definition}
+\begin{example}
+	The powerset $\Powerset{I}$ of any nonempty set $I$ is a filter (the trivial one, if you want) but not an ultrafilter.
+\end{example}
+\begin{example}
+	The \emph{cofinite} (or \emph{Fr\'echet}) filter briefly discussed in the previous subsection in the case of natural numbers, defined as
+	\begin{equation*}
+	\mathcal{F}:=\suchthat{N \subseteq I}{I - N \text{ is finite}}
+	\end{equation*}
+	is a filter, but not in general an ultrafilter.
+\end{example}
+\begin{example}
+	The set $\{I\}$ is an ultrafilter. Note that $I$ is an element of every filter because of the superset closure, hence $\{I\}$ is the smallest filter on $I$.
+\end{example}
+\begin{example}
+	The \emph{principal ultrafilter generated by an element $i \in I$}, defined as
+	\begin{equation*}
+	\mathcal{F}:=\suchthat{S \subseteq I}{i \in S}
+	\end{equation*}
+	is an ultrafilter (as the name suggests, I'd say\dots)
+\end{example}
+
+A very important fact, the proof of which can be found on [], is that
+\begin{theorem}\label{thm:nonprincipalexists}
+	Every filter on a finite set $I$ is a principal ultrafilter. If $I$ is infinite, then it admits a NON principal ultrafilter on it.
+\end{theorem}
+We will use this theorem later, so keep it in mind.
+
+\subsection{Construction of $\nstar \reals$}
+Finally we developed enough stuff to really begin our journey. As we said, we start from sequences of real numbers.
+Since a sequence $(r_1, r_2, \dots)$ of real numbers can be seen as a function $\naturals \to \reals$ and vice-versa, we can denote with $\reals^\naturals$ the set of all sequences of real numbers. We will usually denote with $r$ the sequence $(r_1, r_2, \dots)$ (mnemonic rule: unless otherwise specified, such as in ``$r \in \reals$'', if $r$ has a subscript it's a real, otherwise it's a sequence of reals!), and with $\mathbf{r}$ the constant sequence $(r,r,\dots)$ for $r \in \reals$.
+
+The first thing we want to do is to endow $\reals^\naturals$ with a ring structure. Given sequences $r,s$ we can define
+\begin{align*}
+	r \oplus s :&= (r_1 + s_1, r_2 + s_2, \dots)\\
+	r \odot s :&= (r_1\cdot s_1, r_2 \cdot s_2, \dots) 
+\end{align*}
+$(\reals^\naturals, \oplus, \otimes)$ is a commutative ring, with zero $\mathbf{0} = (0,0,\dots)$, unity $\mathbf{1} = (1,1, \dots)$ and addictive inverses $-r = (-r_1, -r_2, \dots)$ for every $r$. It is not a field since $(0,1,0,1,\dots) \odot (1,0,1,\dots) = \mathbf{0}$
+and so the sequences on the right do not possess multiplicative inverses.
+
+Our aim is to turn this ring into an ordered field. As espected, we will reach our goal quotienting $(\reals^\naturals, \oplus, \otimes)$ by an ultrafilter on the natural numbers. We will show in a bit that we need this ultrafilter to be non principal to get infinities and infinitesimals from our extension.
+\begin{lemma}
+	Let $\mathcal{F}$ be a non principal ultrafilter on $\naturals$, the existence of which is guaranteed by theorem~\ref{thm:nonprincipalexists}. The relation $\equiv$ on $\reals^\naturals$ defined by
+	\begin{equation*}
+		r \equiv s \iffdef \suchthat{n \in \naturals}{r_n = s_n} \in \mathcal{F}
+	\end{equation*}
+	is an equivalence relation, that is moreover compatible with the operations $\oplus, \odot$, meaning that if $r \equiv r', s \equiv s'$, then $r \oplus s \equiv r' \oplus s'$ and $r \odot s \equiv r' \odot s'$. 
+\end{lemma}
+When $r \equiv s$ we say that $r$ and $s$ \emph{agree almost everywhere modulo $\mathcal{F}$}. Borrowing some logical notation the set $\suchthat{n \in \naturals}{r_n = s_n}$ can be denoted as $[[r = s]]$, and can be thought as a measure of the extent to which ``$r=s$'' is true. Quotienting $\reals^\naturals$ by $\mathcal{F}$ can be tought as collapsing this measure into a binary one: $r, s$ agree ``enough to be equal'' or they do not. The notation $[[r = s]]$ is utterly convenient to generalise this procedure to statements other than equality, as an instance setting
+\begin{equation*}
+	[[r \leq s]] := \suchthat{n \in \naturals}{r_n \leq s_n}
+\end{equation*}
+Clearly we can now say that $r \leq s$ iff $[[r \leq s]] \in \mathcal{F}$. Moreover, it is easy to prove that if $r \equiv r', s \equiv s'$ then $[[r \leq s]] \in \mathcal{F}$ if and only if $[[r' \leq s']] \in \mathcal{F}$, meaning that also $\leq$ is somehow well-behaved with respect to $\equiv$. Generalization to $[[r < s]], [[r \geq s]], [[r > s]]$ is obvious. 
+
+Since $\oplus, \odot, <$ are well-behaved with respect to $\equiv$, we can extend these operations to the quotient $\reals^\naturals/ \mathcal{F}$. We denote with $[r]$ an element of $\reals^\naturals/ \mathcal{F}$, that, being an equivalence class modulo $\mathcal{F}$, is the set of all $r' \in \reals^\naturals$ such that $r \equiv r'$. We set
+\begin{align*}
+	[r] + [s] &:= [r \oplus s]\\
+	[r] \cdot [s] &:= [r \odot s]\\
+	[r] < [s] &\iffdef r \leq s	
+\end{align*}
+\begin{theorem}
+	$(\reals^\naturals/ \mathcal{F}, +, \cdot, <)$ is an ordered field. 
+\end{theorem} 
+\begin{proof}
+	Showing that $\reals^\naturals/ \mathcal{F}$ is a ring with zero $[\mathbf{0}]$ and unit $[\mathbf{1}]$ is an easy exercise. To define multiplicative inverses, take an element $[r] \neq [\mathbf{0}]$. This means that $r$ is not zero almost everywhere modulo $\mathcal{F}$, and so that $[[r = \mathbf{0}]] \notin \mathcal{F}$. Being $\mathcal{F}$ an ultrafilter, this implies that its complement $[[r \neq \mathbf{0}]] \in \mathcal{F}$.
+	Setting
+	\[
+	s_n := \begin{cases}
+	\frac{1}{r_n} \text{ if } n \in [[r \neq \mathbf{0}]]\\
+	0 \text{ otherwise}
+	\end{cases}
+	\]
+	then defines a sequence $s$ with the property that $[[r \odot s = \mathbf{1}]] = [[r \neq \mathbf{0}]] \in \mathcal{F}$, and hence $[r] \cdot [s] = [\mathbf{1}]$, meaning that $[s]$ is a multiplicative inverse of $[r]$.
+	We now have to check that the order relation $<$ on $\reals^\naturals/ \mathcal{F}$ is total, meaning that for $[r],[s]$ it is always $[r]>[s]$, $[r]=[s]$ or $[r]<[s]$.
+	Noting that $[[r > s]], [[r=s]], [[r < s]]$ are disjoint sets and that their union is the whole $\naturals$, the conclusion follows from a general property about ultrafilters (easy to prove!):
+	\begin{center}
+		If $A_1, A_2, \dots$ are pairwise disjoint sets such that $\bigcup_i A_i \in \mathcal{F}$, then $A_i \in \mathcal{F}$ \emph{for exactly one $i$}.
+	\end{center}
+	There are still some trifles to prove (like that the set of $[\mathbf{r}]$ such that $[\mathbf{0}] \leq [\mathbf{r}]$ is closed under addition), that are left to the reader. From now on, the ordered field $\reals^\naturals/ \mathcal{F}$ will be denoted with $\nstar \reals$ and called the set of \emph{Hyperreals} (equivalently, \emph{Non-standard reals}). 
+\end{proof}	
+%
+We can send every real number $r \in \reals$ to the equivalence class $[\mathbf{r}] \in  {\nstar \reals}$, where $\mathbf{r}$ is the constant sequence $(r,r, \dots)$. This correspondence is a ordered field homomorphism, and so we can regard $\reals$ as a subfield of $\nstar \reals$: This tells us that the latter is an extension of the former in the ``intuitive'' sense. The common notation to define an element of $\nstar \reals$ that corresponds to some $r \in \reals$ is $\nstar r$. That is, $\nstar r = [\mathbf{r}]$.
+
+\subsection{What about $\mathcal{F}$?}
+We built the hyperreal numbers as a quotient by some non principal ultrafilter $\mathcal{F}$. But which one? What if we have multiple choices of $\mathcal{F}$? There is a right one to pick?
+
+The answer to this question is \emph{it doesn't matter}: If we assume the \emph{continuum hypothesis} it can be proved that all the quotients of $\reals^\naturals$ by a non principal ultrafilter are isomorphic as ordered fields, and this is why we left the choice of $\mathcal{F}$ completely undetermined.
+
+The continuum hypothesis is an important conjecture about cardinality of sets, and it has been proved by Paul Cohen that this conjecture is indecidable in the usual Zermelo-Fraenkel-Choice formalization of set theory. In particular, assuming it is true or not does not produce any contradiction, so it is up to us to decide if we want it or not in our axiomatization of set theory. Clearly we do, and in this way the problem of picking the right ultrafilter for our construction vanishes completely.
+
+\subsection{Infinities and infinitesimals}
+Let $\epsilon$ be the sequence $(1, \frac{1}{2}, \frac{1}{3}, \dots)$.
+Clearly $[[\mathbf{0} \leq \epsilon]] = \naturals$ and hence is in $\mathcal{F}$. On the other hand, for every \emph{positive} $r \in \reals$ it is $[[\mathbf{0} \leq \mathbf{r}]]$; moreover the set $[[\epsilon < \mathbf{r}]]$ is cofinite. We now use another general property of ultrafilters (again, easy to prove!):
+\begin{center}
+	If $\mathcal{F}$ is non principal, it contains all the cofinite sets.
+\end{center}
+From this we infer that $[[\epsilon < \mathbf{r}]] \in \mathcal{F}$ for every positive real $r$, and hence we conclude that $[\epsilon]$ is a \emph{positive infinitesimal}. We can generalize this to define \emph{negative infinitesimals} in the obvious way, and we will refer to \emph{infinitesimals} in general when we do not specify a sign. If we set $[\omega] = [\epsilon]^{-1} = (1,2,3,\dots)$ then for every positive $r \in \reals$ the set $[[\mathbf{r} < \omega]]$ is again cofinite, and hence we can regard $[\omega]$ as a positive unlimited quantity. The existence of such $[\epsilon], [\omega]$ shows that $\nstar \reals$ is a \emph{proper extension} of $\reals$, that is, it contains elements that cannot be put in correspondence with any real number.
+\begin{remark}
+	Note how having such $[\epsilon], [\omega]$ crucially depends on the fact that $\mathcal{F}$ is non principal. Otherwise, we would have $\mathcal{F}:= \suchthat{S \subseteq \naturals}{n \in S}$ for a fixed natural number $n$. But then any sequence $s = (s_1, s_2, \dots, ...)$ would agree with $(s_n, \dots, s_n)$ on the $n$-th number and hence $[[s = \mathbf{s_n}]] \in \mathcal{F}$, meaning that $s = [\mathbf{s_n}] = \nstar s_n$. In this case, then, every element of $\reals/\mathcal{F}$ comes from a real number and we do not obtain anything new from our construction.
+\end{remark}
+%
+If $r$ is a sequence that converges to zero, using the strategy above we can easily check that $[r]$ and hence that it defines an infinitesimal on $\nstar \reals$ (note that, however, it is not guaranteed that $[r] = [\epsilon]$: there are many different infinities and infinitesimals in $\nstar \reals$!). Similarly, if $r \to \infty$ then $[r]$ is unlimited, so the notion of infinities and infinitesimals in our extension $\nstar \reals$ captures the intuitive concepts of infinity and infinitesimal that we know from undergrad calculus. 
+
+Moreover, infinities (that from now on we will prefer to call ``unlimited quantities'') and infinitesimals are elements of $\nstar \reals$, and hence we can multiply, sum them etc. Their arithmetic will be explored in detail later.
+
+\subsection{Extending sets, functions, relations}\label{sec:extending sets functions relations}
+\begin{remark}
+	For all the definitions given below one has to check that they are well defined, in the sense that they do not depend on the choice of representatives in an equivalence class $[r] \in \nstar\reals$. This is indeed the case and verifying it can be a useful exercise.
+\end{remark}
+If $A$ is a subset of $\reals$, we can consider the set $\nstar A$ defined by
+\begin{equation*}
+	[r] \in \nstar A \iffdef \suchthat{n \in \naturals}{r_n \in A} \in \mathcal{F}
+\end{equation*}
+That is, $[r] \in \nstar A$ if $r \in A$ almost everywhere. We call the elements of $\nstar A - A$ \emph{non-standard}. As an example, using the definition it is easy to see that $[\omega] \in \nstar  \naturals$, but clearly $[\omega] \neq [\mathbf{n}]$ for any natural $n$. Hence $[\omega]$ is a non-standard natural number.
+
+Similarly, we can extend functions. If $f:\reals \to \reals$ then $\nstar f:\nstar \reals \to \nstar \reals$ is defined as
+\begin{equation*}
+	\nstar f([(r_1, r_2, \dots)]) = [(f(r_1), f(r_2), \dots]
+\end{equation*}
+We can also extend functions $f:A \to \reals$. To do this, for each $[r] \in \nstar A$ define 
+\begin{equation*}
+	s_n :=
+	\begin{cases}
+		f(r_n) \text{ if } r_n \in A\\
+		0 \text{ otherwise}
+	\end{cases}
+\end{equation*}
+Then we set $\nstar f([r]) = [s]$. We need to do this because $[r] \in \nstar A$ means that $r \in A$ \emph{almost everywhere}, and hence there could be some $r_n$ of the sequence $r$ that are not in $A$, on which $f$ is not well defined. With the definition above we formally set $f$ to $0$ on these members. Notice moreover that if $r$ is a real number in $A$, then $\nstar f({\nstar r}) = {\nstar (f(r))}$: $f$ and $\nstar f$ agree on the real numbers. For this reason it makes sense to drop the $\nstar $ symbol to denote the extension, and this is what we will do for most functions. As an instance, we will use $x^2$ both to denote the usual function $\reals \to \reals$ and its extension $\nstar \reals \to {\nstar \reals}$.
+
+Note in particular that a sequence is a function $s:\naturals \to \reals$, hence we can extend it to an \emph{hypersequence} $s:\nstar \naturals \to \nstar  \reals$: We can now look which values it assumes at infinite since this corresponds to just unlimited numbers in $\nstar\naturals$. This is exactly what we will use to calculate limits.
+
+Finally, we can extend $k$-ary relations: These are nothing but subsets of $\reals^k$, and hence we can set
+\begin{equation*}
+	\nstar P([r^1], [r^k]) \iffdef \suchthat{n \in \naturals}{P(r^1_n, \dots r^k_n)} \in \mathcal{F}
+\end{equation*}
+It is easy to see that the previous extensions are just particular cases of this one: A set $A \subseteq R$ is just an unary relation and every function $f:A \to R$ can be identified with the relation
+$\suchthat{(a,r)}{f(a) = r}$. You can check that extending sets and function seeing them as relations gives us the same results we got performing the extension directly.
+%
+%
+\section{The transfer theorem}
+%
+The \emph{transfer theorem} (also called \emph{transfer principle}, according to your taste) is what tells us which properties get preserved from statements on standard sets, like $\naturals$, $\reals$ etc. to their extensions $\nstar\naturals$, $\nstar \reals$, \dots. Up to now we built our stuff ``manually'', having to verify every time some things: Namely, we said that some property held for a $[r]$ if it held almost everywhere on its components, that is, if the set of the $r_n$ for which the property held in the ``standard'' universe was in the ultrafilter $\mathcal{F}$. Clearly this ain't an easy way to do mathematics since at every step lots of conditions have to be checked and verified. The transfer theorem can be seen as a huge shortcut to avoid all this meticulous work.
+
+To fully understand how the transfer theorem work, quite a bit of a background in logic is needed. In here, we will provide a practical recipe with examples and counterexample that should be more than sufficient to use it with confidence.
+
+First of all we have to specify what do we mean when we say ``statement on a set''. 
+Given a set $S$, we consider the triplet $(S,\mathfrak{R}_S, \mathfrak{F}_S)$, where $\mathfrak{R}_S$ and $\mathfrak{F}_S$ are the set of all the possible relations and functions on $S$, respectively. Note that since a $k$-ary relation on $S$ is just a subset of $S^k$, so $S^k$ is a relation itself $\mathfrak{R}_S$ includes also all the subsets of $S$ (seen as unary relations) and all the finite products of subsets of $S$.
+
+This triplets are called \emph{relational structures}, and each of them comes with a \emph{language}: 
+This language is the set of all the well-formed formulas in which we allow the use of variables (ex. the $x$ in $x \in \naturals$), constants, that are just elements of $S$ (ex. the $1$ in $1 \in \naturals$), functional symbols in $\mathfrak{F}_S$ (ex. the $f$ in $f(x) \in \naturals$), relational symbols in $\mathfrak{R}_S$ (ex. the $\in$ in $x \in \naturals$) and the usual logical connectives $\wedge$, $\vee$, $\neg$, $\to$, $\leftrightarrow$, parentheses and ``$,$''. We moreover allow universal and existential quantification of variables as long as the quantifiers range on a relation in $\mathfrak{R}_S$.
+This means that we allow \emph{only} quantification over elements of subsets of finite products of $S$, hence statements like $\forall K \in \Powerset{S}$ are in general not allowed since $\Powerset{S}$ cannot be expressed as a subset of $S^k$ for some finite $k$ if $S$ is infinite.
+
+A \emph{statement on a set $S$} is a formula in the language of the relational structure on $S$ in which every variable is bounded by a quantifier, that is, every variable can ``range'' over a defined set.
+\begin{example}
+	Here some examples:
+	\begin{itemize}
+		\item $\forall K \subset \naturals, \emptyset \in K$ is not a formula in the language of $\naturals$, since quantification over $K$ is not allowed;
+		\item $x \in \naturals$ is a formula in the language of $\naturals$, but not a statement since $x$ is not bounded;
+		\item $1 \in \naturals$ is a statement in the language of $\naturals$ since there are no variables around, and hence everything is trivially bounded;
+		\item $\forall x \in \naturals, x+1 \in \naturals$ is a statement in the language of $\naturals$ since every variable is bound;
+		\item $\forall n \in \naturals, \exists r \in \reals : n<r$ is a statement in the language of $\reals$: both variables are bounded, one on a subset of $\reals$ and one on $\reals$ itself;
+		\item $\forall c \in \complexs, c+1 \in \reals$ is a statement (clearly false, but still a statement) in the language of $\reals$: $\complexs$ can be seen as $\reals^2$, and hence our quantification is legit!
+	\end{itemize}
+\end{example}
+%
+%
+\subsection{$\nstar$-transformations}
+%
+We can transform a statement on $S$ to a statement on $\nstar S$ using the tools developed in section~\ref{sec:extending sets functions relations} as follows:
+\begin{itemize}
+	\item We replace every set $A$ in the statement with its extension $\nstar A$;
+	\item We replace every function $f$ with its extension $\nstar f$;
+	\item We replace every constant $s$ with its interpretation in the extension $\nstar s$.
+\end{itemize}
+%
+As an instance, the statement $\forall x \in \naturals, x+1 \in \naturals$ becomes $\forall x (\nstar\in) \nstar \naturals, x(\nstar+)\nstar 1 (\nstar \in )\nstar \naturals$. For some special relation and function symbols though, such as ``$+$'', ``$=$'', ``$\in$'', ``$\leq$'' and the like, we avoid to write explicitly the $\nstar$ symbol to avoid clutter. In the previous example then we will usually write $\forall x \in \nstar \naturals, x+\nstar 1 \in \nstar \naturals$. Note that this is not ambiguous: The $\in$ symbol, having $\nstar \naturals$ on the right, must necessarily be the extended version of $\in$, otherwise the formula would not make sense. Similarly, the $+$ is acting on elements $x, \nstar 1$ that are both in $\nstar \naturals$ and hence must denote the extension of the function $+$.
+
+Finally, the relation between a statement and its $\nstar$-transformation is expressed by the transfer theorem:
+\begin{theorem}[Transfer theorem]
+	A statement $\phi$ is true if and only if $\nstar \phi$ is true.
+\end{theorem}
+%
+This in particular means that:
+\begin{theorem}[Universal transfer]
+	If a property $\phi$ holds for \emph{all} real numbers, then $\nstar \phi$ holds for \emph{all} hyperreal numbers.
+\end{theorem}
+%
+If you think about it, this corollary is obvious: A property that holds for all real numbers is a statement on the language of the reals, hence its extension must hold, by transfer theorem, on all the hyperreals, exactly as the corollary says. Similarly,
+\begin{theorem}[Existential transfer]
+	If there is an hyperreal satisfying some property $\nstar \phi$, then there is some real satisfying $\phi$.
+\end{theorem}
+%
+\begin{example}
+	The existential transfer theorem can be very useful: As an example, take Rolle's theorem from undergrad calculus:
+	\begin{center}
+		If a function $f$ is continuous and differentiable on $[a,b]$ and $f(a) = f(b)$, then $f'(x) = 0$ for some $x \in [a,b]$.
+	\end{center}
+	This can be expressed saying that if $f$ is ``such and such'', then it exists a real number $x$ such that ``blablabla''. The idea is that if we can express the ``such and such'' and the ``blablabla'' part of the statement (that is, the bits involving derivatives, continuity and the like) as statements on the reals (and we obviously can, as we will see later), then we can consider the following
+	\begin{center}
+		If a function $\nstar f$ is $\nstar$-continuous and $\nstar$-differentiable on $\nstar([ a,b])$ and $\nstar f(\nstar a) = \nstar f(\nstar b)$\\
+		then $\nstar f'(x) = \nstar 0$ for some $x \in \nstar([ a,b])$.
+	\end{center}
+	And the two statements will be completely entangled: if one is true so is the other. The difference is that in the second case we have much more choice for our $x$, since it can be an hyperreal. The idea is that even if we find an $x$ that satisfies the condition turns out to be in $\nstar \reals - \nstar \reals$, the transfer theorem ensures there will be some $x' \in \reals$ for which the first statement holds.
+\end{example}
+%
+The core of non-standard analysis, then, is the following: Every time we have a statement on $\nstar S$ that is the $\nstar$-transform of some statement $\phi$ on $S$, we can ``drag'' the result back to $S$. Clearly the statements on $\nstar S$ that are not in the form $\nstar \phi$ for some $\phi$ on $S$ are \emph{NOT} transferable, and this is exactly where one has to pay attention. 
+\begin{example}
+	Consider a sequence $s:\naturals \to \reals$ and extend it to $\nstar s:\nstar\naturals \to \nstar\reals$.
+	Suppose we can show that the sequence $\nstar s$ never takes infinite values. We then want to prove that $s$ is a bounded sequence. Since $\nstar s$ never takes infinite values the following statement must be true for some unlimited $\omega$:
+	\begin{equation*}
+		(\forall n \in \nstar\naturals)(|\nstar s(n)| \leq \omega)
+	\end{equation*}
+	%
+	Since $\omega$ is unlimited, though, it must be $\omega \in \nstar \reals - \reals$ and hence the statement above is \emph{not} in a transferrable form, because $\omega$ cannot be expressed as $\nstar r$ for some real $r$. We then try to massage the statement in a transferrable form: In fact, since $\omega \in \nstar \reals$, the formula above implies that the following is true:
+	\begin{equation*}
+		(\exists r \in \nstar \reals)(\forall n \in \nstar\naturals)(|\nstar s(n)| \leq r)
+	\end{equation*}
+	%
+	but now we can transfer this back to our ``standard'' world! In fact, from here we can apply the transfer theorem and deduce that the following must be true too:
+	\begin{equation*}
+	(\exists r \in \reals)(\forall n \in \naturals)(|s(n)| \leq r)
+	\end{equation*}	
+	%
+	That obviously means that $s$ is bounded on the reals.
+\end{example}
+%
+\begin{remark}[A bit of jargon]
+	Consider now the triplet $(\nstar S, \mathfrak{R}_{\nstar S}, \mathfrak{F}_{\nstar S})$, that is, the relationa structure on $\nstar S$. Relations in $\mathfrak{R}_{\nstar S}$ that are of the form $\nstar R$ for some $R$ in $\mathfrak{R}_{S}$ are called \emph{internal relations}. Similarly we get a definition of \emph{internal function}. What the transfer theorem says is that a statement can be transferred from $\nstar S$ to $S$ if and only if it comprises only internal relations and functions.
+\end{remark}
+%
+\begin{center}
+	\textbf{- Mantra of non-standard analysis -}\\
+	\textbf{Pay attention!} Transfer theorem from $S$ to $\nstar S$ is always ok. When you go in the other direction make sure, before applying tit, that 100\% of your stuff is in transferrable form, that is, it is made of \emph{statements} (and not just formulas) in which only internal relations and functions are present.
+\end{center}
+
+
+
+\section{Examples}
+
+\section{Conlusion}
+
+``I know kung fu.''	
+\end{document}
