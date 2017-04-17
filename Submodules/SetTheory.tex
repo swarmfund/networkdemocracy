@@ -1,14 +1,17 @@
 %%%%%%%%%%%%%%%%%%%%%%%
 %% Set theory macros %%
 %%%%%%%%%%%%%%%%%%%%%%%
+	
+% Allows something to be called outside math mode with the right spacing
+\newcommand{\setdefinition}[1]{\ensuremath{#1}\xspace}
 
 % Important sets. Can be called also in text mode.
-	\newcommand{\naturals}{\definition{\mathbb{N}}} % Set of natural numbers
-	\newcommand{\integers}{\definition{\mathbb{Z}}} % Set of integer numbers
-	\newcommand{\rationals}{\definition{\mathbb{Q}}} % Set of rational numbers
-	\newcommand{\reals}{\definition{\mathbb{R}}} % Set of real numbers
-	\newcommand{\complexs}{\definition{\mathbb{C}} % Set of complex numbers
-	\newcommand{\integersMod}[1]{\definition{\mathbb{Z}_{#1}}} % Set/group/ring of integers mod #1
+	\newcommand{\naturals}{\setdefinition{\mathbb{N}}} % Set of natural numbers
+	\newcommand{\integers}{\setdefinition{\mathbb{Z}}} % Set of integer numbers
+	\newcommand{\rationals}{\setdefinition{\mathbb{Q}}} % Set of rational numbers
+	\newcommand{\reals}{\setdefinition{\mathbb{R}}} % Set of real numbers
+	\newcommand{\complexs}{\setdefinition{\mathbb{C}}} % Set of complex numbers
+	\newcommand{\integersMod}[1]{\setdefinition{\mathbb{Z}_{#1}}} % Set/group/ring of integers mod #1
 
 
 % Set-theoretic operations
@@ -31,11 +34,11 @@
 
 
 % Non-standard Analysis
-	\newcommand{\starNaturals}{\definition{\nonstd{\naturals}}} % Set of non-standard naturals
-	\newcommand{\starIntegers}{\definition{\nonstd{\integers}}} % Set of non-standard integers
-	\newcommand{\starRationals}{\definition{\nonstd{\rationals}}} % Set of non-standard rationals
-	\newcommand{\starComplexs}{\definition{\nonstd{\complexs}}} % Set of non-standard complex numbers
-	\newcommand{\starReals}{\definition{\nonstd{\reals}}} % Set of non-standard realsnumbers
+	\newcommand{\starNaturals}{\setdefinition{\nonstd{\naturals}}} % Set of non-standard naturals
+	\newcommand{\starIntegers}{\setdefinition{\nonstd{\integers}}} % Set of non-standard integers
+	\newcommand{\starRationals}{\setdefinition{\nonstd{\rationals}}} % Set of non-standard rationals
+	\newcommand{\starComplexs}{\setdefinition{\nonstd{\complexs}}} % Set of non-standard complex numbers
+	\newcommand{\starReals}{\setdefinition{\nonstd{\reals}}} % Set of non-standard realsnumbers
 	\newcommand{\nonstd}[1]{^\star\!#1} % Non standard extension
 
 %% Legacy: For macro-maniacs freaks
