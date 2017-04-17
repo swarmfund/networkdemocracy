@@ -1,0 +1,18 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Coarse graining & Sheaf Theory macros%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	\newcommand{\comonad}{U} % General-purpose comonad symbol
+	\newcommand{\counit}[1]{\epsilon_{#1}} % Comonad counit over object #1
+	\newcommand{\comult}[1]{\nu_{#1}} % Comonad comultiplication over object #1
+	\newcommand{\comonadFrak}{\mathfrak{U}} % frakture comonad symbol
+	\newcommand{\sheafOfEventsSym}{\mathcal{E}} % Sheaf of events symbol
+	\newcommand{\sheafOfEvents}[1]{\sheafOfEventsSym[#1]} % Sheaf of events symbol
+	\newcommand{\restrictionMap}[2]{\operatorname{res}^{#1}_{#2}} % Restriction map for the sheaf of events
+	\newcommand{\distributionFunctorSym}[1]{\mathcal{D}_{#1}} % Functor of R-distributions (symbol)
+	\newcommand{\distributionFunctor}[2]{\distributionFunctorSym{#1}[#2]} % Functor of R-distributions
+	\newcommand{\presheafOfDistributionsSym}[1]{\distributionFunctorSym{#1}\sheafOfEventsSym} % presheaf of distributions (symbol)
+	\newcommand{\presheafOfDistributions}[2]{\presheafOfDistributionsSym{#1}[#2]} % presheaf of distributions (functor)
+	\newcommand{\supportSubpresheafSym}{\mathcal{S}} % support subpresheaf (symbol)
+	\newcommand{\supportSubpresheaf}[1]{\supportSubpresheafSym[#1]} % support subpresheaf (functor)
+	

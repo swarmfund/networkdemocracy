@@ -1,0 +1,53 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Theorem environments%%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Theorem
+	\declaretheorem[
+	name=Theorem, 
+	numberwithin=section %Change this if you want different numbering
+	]{theorem}
+
+% Proposition
+	\declaretheorem[
+	name=Proposition, 
+	sibling=theorem % This make numbering to go along with the one above 
+	]{proposition}
+
+% Lemma
+	\declaretheorem[
+	name=Lemma, 
+	sibling=theorem
+	]{lemma}
+
+% Corollary
+	\declaretheorem[
+	name=Corollary, 
+	sibling=theorem
+	]{corollary}	
+
+% Remark
+	\declaretheorem[style=definition, 
+	name=Remark, 
+	sibling=theorem
+	]{remark}
+
+% Definition
+	\declaretheorem[
+	style=definition, 
+	name=Definition,
+	sibling=theorem
+	]{definition}
+
+% Example
+	\declaretheorem[
+	style=definition, % Examples are in the same style of definitions
+	name=Example
+	]{example}
+
+% Counterexample
+	\declaretheorem[
+	style=definition, 
+	name=Counterexample, 
+	sibling=example
+	]{counterexample}

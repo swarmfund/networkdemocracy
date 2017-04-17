@@ -1,0 +1,54 @@
+%%%%%%%%%%%%%%%%%%%%%%%
+%% Set theory macros %%
+%%%%%%%%%%%%%%%%%%%%%%%
+
+% Important sets. Can be called also in text mode.
+	\newcommand{\naturals}{\definition{\mathbb{N}}} % Set of natural numbers
+	\newcommand{\integers}{\definition{\mathbb{Z}}} % Set of integer numbers
+	\newcommand{\rationals}{\definition{\mathbb{Q}}} % Set of rational numbers
+	\newcommand{\reals}{\definition{\mathbb{R}}} % Set of real numbers
+	\newcommand{\complexs}{\definition{\mathbb{C}} % Set of complex numbers
+	\newcommand{\integersMod}[1]{\definition{\mathbb{Z}_{#1}}} % Set/group/ring of integers mod #1
+
+
+% Set-theoretic operations
+
+	\newcommand{\Powerset}[1]{\mathcal{P}(#1)} % Powerset of #1
+	\newcommand{\modclass}[2]{#1 \; (\text{mod } #2)} % Equivalence class of integers mod #2 corresponding to representative #1
+	\newcommand{\suchthat}[2]{\left\{#1 \: \colon \: #2\right\}} % Set of elements #1 such that condition #2 holds 
+	
+	\newcommand{\domain}[1]{\operatorname{dom}#1} % Domain of function/morphism #1
+	\newcommand{\codomain}[1]{\operatorname{codom}#1} % Codomain of function/morphism #1
+	\newcommand{\support}[1]{\operatorname{supp}#1} % Support of function/morphism #1
+	\newcommand{\cosupport}[1]{\operatorname{cosupp}#1} % Cosupport of function/morphism #1
+	
+	\newcommand{\restrict}[2]{\left. #1 \right\vert_{#2}} % Restriction of function/morphism #1 to subset/subobject #2
+
+	\newcommand{\inject}{\hookrightarrow} % Set-theoretic injection
+	\newcommand{\Irreps}[1]{\operatorname{Irr}[#1]} % Set of irreps for group #1
+
+	\newcommand{\closure}[1]{\operatorname{Cl}({#1})} %Standard notation for closure operators			
+
+
+% Non-standard Analysis
+	\newcommand{\starNaturals}{\definition{\nonstd{\naturals}}} % Set of non-standard naturals
+	\newcommand{\starIntegers}{\definition{\nonstd{\integers}}} % Set of non-standard integers
+	\newcommand{\starRationals}{\definition{\nonstd{\rationals}}} % Set of non-standard rationals
+	\newcommand{\starComplexs}{\definition{\nonstd{\complexs}}} % Set of non-standard complex numbers
+	\newcommand{\starReals}{\definition{\nonstd{\reals}}} % Set of non-standard realsnumbers
+	\newcommand{\nonstd}[1]{^\star\!#1} % Non standard extension
+
+%% Legacy: For macro-maniacs freaks
+%	\newcommand{\set}[1]{\{#1\}} 
+%	% Standard notation for sets.
+%	\newcommand{\cat}[1]{\mathcal{#1}}
+%	% Standard notation for categories
+%	\newcommand{\couple}[2]{(#1,#2)} 
+%	%Classical notation for set-theoretic couples
+%	\newcommand{\relation}[1]{#1} 
+%	% Relation between sets
+%	\newcommand{\congruenceclass}[2]{[#2]_{#1}}
+%	%Standard notation for congruence/equivalence classes
+%	\newcommand{\quotient}[2]{#1/#2} 
+%	%Quotient of algebraic structures		
+% 	\newcommand{\substruct}[2]{{\operatorname{Sub}_{#1}(#2)}} % Set of subalgebras of a given algebra
