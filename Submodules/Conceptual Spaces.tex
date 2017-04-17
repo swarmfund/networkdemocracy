@@ -1,0 +1,28 @@
+% Categoy names
+% Load the macro catnames.tex
+
+% Quantales
+\newcommand{\quantale}[1]{\ensuremath{\mathbf{#1}}} % Quantale definition
+\newcommand{\qprod}{\odot} % Quantale product
+\newcommand{\qjoin}{\bigvee} % Quantale join
+\newcommand{\qunit}{k} % Quantale unit
+\newcommand{\qleq}{\leq} % Quantale unit
+% Algebraic stuff
+\newcommand{\signature}[1]{\ensuremath{\operatorname{#1}}}
+\newcommand{\signatures}{\ensuremath{\catname{Sig}}\xspace}
+\newcommand{\signaturesex}[1]{\ensuremath{\catname{Sig}^{\operatorname{#1}}}\xspace}
+\newcommand{\linsignatures}{\signaturesex{lin}}
+\newcommand{\affsignatures}{\signaturesex{aff}}
+\newcommand{\relsignatures}{\signaturesex{rel}}
+\newcommand{\cartsignatures}{\signaturesex{cart}}
+
+\newcommand{\model}[2]{\ensuremath{\operatorname{Mod}_{#1}(#2)}\xspace} % Models of some theory in a category
+\newcommand{\theory}[1]{\ensuremath{\mathbb{#1}}\xspace} % Some logical theory
+% Relations and spans
+\newcommand{\converse}[1]{\ensuremath{{#1}^\circ}\xspace} %Relational/span converse
+\newcommand{\graph}[1]{\ensuremath{{#1}_\circ}\xspace} %Relational/span graph
+\newcommand{\cograph}[1]{\ensuremath{{}_{\circ}{#1}}\xspace} %Span cograph		
+
+
+% Language stuff
+\newcommand{\lang}[1]{\emph{#1}} % Word or sentence, used in examples.
