@@ -2,12 +2,18 @@
 %% Topology and Linear Algebra macros %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Allows something to be called outside math mode with the right spacing
+\newcommand{\spacedefinition}[1]{\ensuremath{#1}\xspace}
+
+% Defines the standard style for a category (bold)
+\newcommand{\spacename}[1]{{\mathcal{#1}}}
+
 %% General purpose space names 
-	\newcommand{\SpaceH}{\mathcal{H}} 
-	\newcommand{\SpaceG}{\mathcal{G}}
-	\newcommand{\SpaceK}{\mathcal{K}}
-	\newcommand{\SpaceA}{\mathcal{A}}
-	\newcommand{\SpaceB}{\mathcal{B}}
+	\newcommand{\SpaceH}{\spacename{H}} 
+	\newcommand{\SpaceG}{\spacename{G}}
+	\newcommand{\SpaceK}{\spacename{K}}
+	\newcommand{\SpaceA}{\spacename{A}}
+	\newcommand{\SpaceB}{\spacename{B}}
 
 %% Inner products and traces
 	\newcommand{\ket}[1]{\vert #1 \rangle} % Ket labelled #1
