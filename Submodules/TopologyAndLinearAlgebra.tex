@@ -6,7 +6,7 @@
 \newcommand{\spacedefinition}[1]{\ensuremath{#1}\xspace}
 
 % Defines the standard style for a category (bold)
-\newcommand{\spacename}[1]{{\mathcal{#1}}}
+\newcommand{\spacename}[1]{\spacedefinition{\mathcal{#1}}}
 
 %% General purpose space names 
 	\newcommand{\SpaceH}{\spacename{H}} 
@@ -42,6 +42,6 @@
 	\newcommand{\Bounded}[1]{\operatorname{B}\left[#1\right]} % Space of bounded operators over #1
 	\newcommand{\BoundedMaps}[2]{\operatorname{B}\big(#1,#2\big)} % Space of bounded operators over #1
 	\newcommand{\LtwoSym}{\operatorname{L}^2} % Symbol for L2 spaces
-	\newcommand{\Ltwo}[1]{\LtwoSym[#1]} % L2 space over space #1
+	\newcommand{\Ltwo}[1]{\spacedefinition{\LtwoSym[#1]}} % L2 space over space #1
 	\newcommand{\ltwoSym}{\ell^2} % Symbol for l2 spaces
-	\newcommand{\ltwo}[1]{\ltwoSym[#1]} % l2 space over space #1
+	\newcommand{\ltwo}[1]{\spacedefinition{\ltwoSym[#1]}} % l2 space over space #1
