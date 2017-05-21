@@ -7,7 +7,7 @@ This repo contains useful macros for people working with categorical quantum mec
 ### How do I download these macros? ###
 **I just want to download the macros. The project I'm working on is not on GIT.**
 
-Just navigate to your project main folder and give
+From a terminal window, just navigate to your project main folder and give
 
 
 ```
@@ -19,7 +19,8 @@ git clone git@bitbucket.org:Nigredo/quantum-latex-macros.git
 
 A folder named 'quantum-latex-macros' will appear in your main folder.
 
-**I want to download the macros, but the project I'm working on is already on GIT.
+**I want to download the macros, but the project I'm working on is already on GIT.**
+
 Just navigate to your project main folder and give
 
 ```
@@ -29,7 +30,7 @@ git subtree add --prefix=quantum-latex-macros/ git@bitbucket.org:Nigredo/quantum
 ```
 The *--squash* command omits all the commit history of these macros, that would just make your project balloon in size with no reason. If you want to copy the whole commit history in your project just leave the *--squash* command out.
 
-A folder named *quantum-latex-macros* will appear in your main folder. This will not interfere with your git project, and you will be able to push/pull/commit as you always do. The macros will be just like any other folder in your project and you will be able to modify them as you wish.
+A folder named *quantum-latex-macros* will appear in your main folder. This will not interfere with your GIT project, and you will be able to push/pull/commit as you always do. The macros will be just like any other folder in your project and you will be able to modify them as you wish. In particular, the macros will already be there when anyone clones your project, so your colleagues won't have to do anything.
 
 ### How do I get set up? ###
 Just put this in your main tex file:
