@@ -33,6 +33,7 @@ The *--squash* command omits all the commit history of these macros, that would 
 A folder named *quantum-latex-macros* will appear in your main folder. This will not interfere with your GIT project, and you will be able to push/pull/commit as you always do. The macros will be just like any other folder in your project and you will be able to modify them as you wish. In particular, the macros will already be there when anyone clones your project, so your colleagues won't have to do anything.
 
 ### How do I get set up? ###
+
 Just put this in your main tex file:
 
 ```
@@ -46,7 +47,7 @@ Just put this in your main tex file:
 ```
 
 
-If you dowloaded the macros in a different folder/path than the one I suggested before you just have to edit the following line
+If you dowloaded the macros in a different folder/path than the default one (*quantum-latex-macros*) you just have to edit the following line
 
 
 ```
@@ -58,8 +59,9 @@ If you dowloaded the macros in a different folder/path than the one I suggested 
 
 replacing *quantum-latex-macros* with your folder path.
 
-### Updating the macros ### 
-I do not suggest to update these macros within a project. Some command names may have changed and you could have to rewrite part of your stuff. Anyway, if you to proceed:
+### Updating the macros 
+
+I do not suggest to update these macros within a project. Some command names may have changed and you might have to rewrite part of your stuff. Anyway, if you want to proceed:
 
 **I just downloaded the macros. The project I'm working on is not on GIT.**
 
@@ -89,7 +91,7 @@ to be given anywhere in your project folder. You may have to change *quantum-lat
 
 ### Contribution guidelines ###
 
-If you want to contribute to this project just mail me (see last section) and I'll give you writing rights to it. If you have writing privilege to this repo keep reading, otherwise ignore this section.
+If you want to contribute to this project just mail me (see last section) and I'll give you writing rights to it. If you have writing privileges to this repo keep reading, otherwise ignore this section.
 
 If you just cloned the macros into a clean folder you can push and commit as you normally do in GIT. 
 
@@ -115,6 +117,10 @@ alias Latexpullmacros="git subtree pull --prefix=quantum-latex-macros/ git@bitbu
 ```
 
 Now you will just have to give *Latexaddmacros* and *Latexpullmacros* within your GIT project folder to add or update the macros, respectively.
+
+### Acknowledgments ###
+
+These macros are originally based on the ones developed by Stefano Gogioso and William Zeng.
 
 ### Who do I talk to? ###
 
