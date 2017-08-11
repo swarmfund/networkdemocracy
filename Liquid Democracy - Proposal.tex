@@ -1,0 +1,92 @@
+\documentclass[submission, copyright,creativecommons,sharealike,noncommercial]{eptcs}
+\providecommand{\event}{Swarm group}
+
+\newcommand{\yourpath}{Preambles/}
+\usepackage{import}
+\subimport{\yourpath/}{packages}
+\subimport{\yourpath/}{macros}
+\subimport{\yourpath/}{tikzstyles}
+
+\subimport{Preambles/}{LocalDefinitions}
+
+
+\title{Liquid Democracy\\ -- A concrete proposal --}
+\author{Fabrizio Romano Genovese
+	\institute{Quantum Group \\ University of Oxford}
+	\email{fabrizio.genovese@cs.ox.ac.uk}
+}
+\def\titlerunning{Liquid Democracy -- Concrete proposal}
+\def\authorrunning{F.R.Genovese}
+
+
+\begin{document}
+
+%	\bibliographystyle{eptcs}
+	
+	\maketitle
+
+	\begin{abstract}
+		After some brainstorming sessions in which the main ideas have been laid down, we start drafting how a hypothetical Liquid Democracy implementation for Swarm could look in technical terms. We will use a typed approach, that should in principle be compatible with the concepts behind StateBox.
+	\end{abstract}
+
+\section{Introduction}
+
+
+\section{Hierarchy Structure}
+	We start laying down how the \emph{social structure behind Swarm} works. There are four main entities we are interested in defining. These are
+	\begin{description}
+		\item[Swarm:] This must be thought of as a financial market, since Swarm provides all the necessary infrastructure to host projects.
+		
+		\item[Project:] An investment project on the Swarm platform. Projects must be thought of as the equivalent of companies. Creating a new project on Swarm is like putting a company on the stock market, allowing investors to put money into it.
+		
+		\item[Collective:] Represents a group of people. Collectives must be thought of as group of investors sharing some interests. Collectives can also be defined locally in a project, and are useful to denote those people that actually make the project work. For instance, a collective called ``marketing'' in a project called ``real estate'' could include all those investors that are actually active in doing publicity to the project itself. Local collectives can only be defined within a project.
+		
+		\item[Person:] The basic block of the Liquid Democracy environment. A Person must be thought of as an investor moving in the financial market (the Swarm platform). Investors can join or leave projects (the equivalent of buying/selling company stocks). A person can be part of multiple collectives and multiple projects.
+	\end{description}
+	%
+	When we want these social structures to interact, we can use their names as programming language types, as follows:
+	\begin{example}
+		Suppose, for instance, that there are two Swarm projects, call them $X$ and $Y$. Some investors of $X$ and $Y$ want these two projects to merge into a unique project $Z$, and hence start drafting a series of smart contracts using StateBox that ``entangle'' all the regulation of $X$ and $Y$ providing a new set of regulations for $Z$. This can be seen as a procedure having type $\emph{merge}: \project \times \project \to \project$, meaning that it takes two projects in input and creates a new project as output. 
+		
+		This is particularly useful because this merging proposal will have to be voted by the investors of both $X$ and $Y$ to be approved. Using this typed mindset we can draft an automatic procedure to ask the relevant people involved to vote. In pseudocode, this may look like
+			\begin{lstlisting}
+			for all P: $\project$ in domain($\emph{merge}$)
+				for all u: $\person$ in P: $\project$
+					Forward.Vote($\emph{merge}$, u)
+				end
+			end
+			\end{lstlisting}
+		Where \emph{Forward.Vote} is some function that automatically asks user $u$ to vote for the approval of the contract $\emph{merge}$. We can implement our contract drafting tool to continuously scan for all the projects, collectives and people named in the contract, notifying the contract writer about who is going to receive the voting request in real time. When the proposal is submitted, an algorythm like the one above can be triggered to run automatically.
+	\end{example}
+	%
+	\begin{example}
+		Suppose that user $u$ wants to join a collective $C$. The collective $C$ has to approve this join request. Again, this amounts to have an algorithm
+			\begin{lstlisting}
+				for all a: $\person$ in C: $\collective$
+					Forward.Vote($\emph{join(u,C)}$, a)
+				end
+			\end{lstlisting}
+		%
+		That automatically asks the people in the collective if they want $u$ in or not when $u$ submits his join request.
+	\end{example}
+	%
+	\begin{example}
+		Suppose that a new change of rules for Swarm is proposed. In this case, our algorythm will look like
+			\begin{lstlisting}
+				for all a: $\person$ in $\swarm$
+				Forward.Vote($\emph{NewRules}$, a)
+				end
+			\end{lstlisting}
+		%
+		We can see here that $\swarm$ is not considered as a variable type but as a \emph{constant}. This makes sense because there is only one Swarm platform, and this constant is used every time there is some decision to be taken that involves all the users present.
+	\end{example}
+	%
+	\noindent
+	The hierarchy structure, up to now, looks like this:
+	\[
+	\swarm > \project > \collective > \person
+	\]
+	Meaning that, for instance, some procedure that acts on a project $P$ is relevant for all the collectives and people that are part of $P$. 
+\end{document}
+
+
