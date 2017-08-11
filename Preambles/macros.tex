@@ -1,0 +1,34 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Macros, general settings %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%% General 
+	\subimport{Submodules/}{TheoremEnvironments} % Defines theorems notations
+		
+	\newcommand{\emptyArg}{\,\underline{\hspace{6px}}\,} % Underscore for omitted, anonymous arguments
+	\newcommand{\inlineQuote}[1]{\textquotedblleft #1\textquotedblright} % Left-right quotes surrounding #1
+	\newcommand{\TODO}{\textbf{[TODO]}} % A bold TODO placeholder
+	\newcommand{\citeTODO}[1]{\textbf{[#1]}} % A bold citation placeholder
+
+
+%% Notation 
+	\newcommand{\iffdef}{\stackrel{def}{\iff}} % If and only if (by definition)
+	\newcommand{\iffdeftemp}{\stackrel{\Delta}{\iff}} % If and only if (by definition, but notation limited to section/context) 
+	%\newcommand{\eqdef}{\stackrel{def}{=}} % Equal (by definition)
+	\newcommand{\eqdef}{:=} % Equal (by definition)	
+	\newcommand{\eqdeftemp}{\stackrel{\Delta}{=}} % Equal (by definition, but notation limited to section/context) 
+	\newcommand{\imply}{\Rightarrow} % Implies
+	\newcommand{\turnstyle}{\models} % Entails
+
+
+%% Here you call all the submodules you may need:
+	\subimport{Submodules/}{CategoryTheory}
+	\subimport{Submodules/}{CoarseGrainingAndSheafTheory}
+	\subimport{Submodules/}{ConceptualSpaces}
+	\subimport{Submodules/}{InlineNotationForCQM}
+	\subimport{Submodules/}{LatticeTheory}
+	\subimport{Submodules/}{MonadicDynamics}
+	\subimport{Submodules/}{SetTheory}
+	\subimport{Submodules/}{TopologyAndLinearAlgebra}
