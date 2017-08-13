@@ -96,9 +96,9 @@
 	Kinds are Swarm, project or collective specific, meaning that within every of such social structures a different set of kinds can be defined. For instance, a collective $C$ particularly focused on the environmental repercussions of a project $P$ may create a specific kind $\textbf{environment}_C$ (the subscript means that this kind is specific for $C$) to classify all the proposals that deal with environmental issues in $P$. 
 	
 	\begin{example}\label{ex:subkind}
-		Kinds become especially useful to make people's life on Swarm easier. For instance, say that a user $u$ is part of some collective $C$, but doesn't really care about all the fuss regarding the collective rules (requisites for joining or leaving the collective, for instance). In this case the user may want to delegate someone else to vote for him when changes of rules are proposed, or he may want to automatically abstain when any such proposal is submitted. This becomes easier endorsing some other user $u'$ to vote for him every time a contract having kind $\textbf{rules}_C$ is proposed. In this way, vote endorsement becomes a very customizable process. As we said, kinds are organized as a filesystem folder structure, and this allows us to formalize endorsing conditions based on kinds by means of simple propositional logic statements. 
+		Kinds become especially useful to make people's life on Swarm easier. For instance, say that a user $u$ is part of some collective $C$, but doesn't really care about all the fuss regarding the collective rules (requisites for joining or leaving the collective, for instance). In this case the user may want to delegate someone else to vote for him when changes of rules are proposed, or he may want to automatically abstain when any such proposal is submitted. This becomes easier delegating some other user $v$ to vote for him every time a contract having kind $\textbf{rules}_C$ is proposed. In this way, vote delegation becomes a very customizable process. As we said, kinds are organized as a filesystem folder structure, and this allows us to formalize delegation conditions based on kinds by means of simple propositional logic statements. 
 		
-		For instance suppose that the kind $\textbf{rules}_C$ has two defined subkinds $\textbf{rules/voting.procedures}_C$ and $\textbf{rules/admission.criteria}_C$. A user $u$ endorsing some other user $v$ for $\textbf{rules}$ automatically endorses $v$ for $\textbf{rules/voting.procedures}_C$ and $\textbf{rules/admission.criteria}_C$ too, but $u$ can refine this endorsing $v$ for $\textbf{rules}_C \wedge \neg\textbf{rules/voting.procedures}_C$. In this case any proposal regarding changes of rules is endorsed to $v$, with the exception of proposals regarding changes of voting procedures specifically, that are instead brought to the attention of $u$ (see Figure~\ref{fig:endorsing statements}).
+		For instance suppose that the kind $\textbf{rules}_C$ has two defined subkinds $\textbf{rules/voting.procedures}_C$ and $\textbf{rules/admission.criteria}_C$. A user $u$ delegationg some other user $v$ for $\textbf{rules}$ automatically delegates $v$ for $\textbf{rules/voting.procedures}_C$ and $\textbf{rules/admission.criteria}_C$ too, but $u$ can refine this delegating $v$ for $\textbf{rules}_C \wedge \neg\textbf{rules/voting.procedures}_C$. In this case any proposal regarding changes of rules is delegated to $v$, with the exception of proposals regarding changes of voting procedures specifically, that are instead brought to the attention of $u$ himself (see Figure~\ref{fig:delegating statements}).
 		\begin{figure}[h]
 			\centering
 			\begin{tikzpicture}[fill=gray]
@@ -118,7 +118,7 @@
 				(6,2) circle (1) (8,1)  node [text=black,below] {$\textbf{rules/admission.criteria}_C$}
 				(0,0) rectangle (10,5) node [text=black,above] {$\textbf{rules}_C$};
 			\end{tikzpicture}
-			\caption{The expression $\textbf{rules}_C \wedge \neg\textbf{rules/voting.procedures}_C$ endorses the red area to $v$ and the blue area to $u$.}\label{fig:endorsing statements}
+			\caption{The expression $\textbf{rules}_C \wedge \neg\textbf{rules/voting.procedures}_C$ endorses the red area to $v$ and the blue area to $u$.}\label{fig:delegating statements}
 		\end{figure}
 	\end{example}
 
@@ -173,14 +173,20 @@
 		
 		\item[\emph{propose}(contract:$\kind$,$C:\collective \mid P:\project \mid \swarm$):] Similar to the previous one, but used to propose a new contract that does not need the modification of some existing ones.
 		
-		\item[\emph{endorse}(contract:\kind):] This method registers the fact that a given user has endorsed a proposal.
+		\item[\emph{back}(contract:\kind):] This method registers the fact that a given user is backing a proposal.
 		
-		\item[\emph{deendorse}(contract:\kind):] Opposite to \emph{endorse}, retires the endorsement of a proposal that had been endorsed previously.
+		\item[\emph{unback}(contract:\kind):] Opposite of \emph{endorse}, retires the backing of a proposal that had been backed previously.
+		
+		\item[\emph{delegate}($k:\kind, u:\person$):] This method delegates another user $u$ for the voting of contracts of type $k$.
+		
+		\item[\emph{undelegate}($k:\kind$):] Opposit of \emph{delegate}, retires the delegation for a kind $k$.
 		
 		
 		\item[\emph{invest}(P:\project, t:\token):] If the necessary conditions in the rules contract of $P$ are met (minimum amount of the investment and so on), invest a $t$ amount of money in $P$. 
 		
-		\item[\emph{cashback}(p:\project):] The users closes its investment in a project $P$, and receives his amount of tokens or other good as prescribed by the project itself.
+		\item[\emph{cashback}(p:\project):] The users closes its investment in a project $P$, and receives his amount of tokens or other goods as prescribed by the project itself.
+		
+		
 	\end{description}
 	
 	
