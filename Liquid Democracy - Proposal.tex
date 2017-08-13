@@ -87,6 +87,104 @@
 	\swarm > \project > \collective > \person
 	\]
 	Meaning that, for instance, some procedure that acts on a project $P$ is relevant for all the collectives and people that are part of $P$. 
+
+\section{Proposals and kinds}
+	Now that we drafted these different social entities in Swarm, we have to provide the means to make them interact together. Interactions are mainly made by means of proposals, that are nothing but smart contracts. Proposals are classified by \emph{kinds}, that are tags denoting the type of proposal considered. To each proposal can only be assigned one kind, to make the categorizing of smart contracts easier. 
+	
+	Sufficient precision is attained allowing kinds to be nestable together in a fashion similar to a filesystem folder structure on any PC, meaning that we should be able to define relevant subkinds if needed. 
+	
+	Kinds are Swarm, project or collective specific, meaning that within every of such social structures a different set of kinds can be defined. For instance, a collective $C$ particularly focused on the environmental repercussions of a project $P$ may create a specific kind $\textbf{environment}_C$ (the subscript means that this kind is specific for $C$) to classify all the proposals that deal with environmental issues in $P$. 
+	
+	\begin{example}\label{ex:subkind}
+		Kinds become especially useful to make people's life on Swarm easier. For instance, say that a user $u$ is part of some collective $C$, but doesn't really care about all the fuss regarding the collective rules (requisites for joining or leaving the collective, for instance). In this case the user may want to delegate someone else to vote for him when changes of rules are proposed, or he may want to automatically abstain when any such proposal is submitted. This becomes easier endorsing some other user $u'$ to vote for him every time a contract having kind $\textbf{rules}_C$ is proposed. In this way, vote endorsement becomes a very customizable process. As we said, kinds are organized as a filesystem folder structure, and this allows us to formalize endorsing conditions based on kinds by means of simple propositional logic statements. 
+		
+		For instance suppose that the kind $\textbf{rules}_C$ has two defined subkinds $\textbf{rules/voting.procedures}_C$ and $\textbf{rules/admission.criteria}_C$. A user $u$ endorsing some other user $v$ for $\textbf{rules}$ automatically endorses $v$ for $\textbf{rules/voting.procedures}_C$ and $\textbf{rules/admission.criteria}_C$ too, but $u$ can refine this endorsing $v$ for $\textbf{rules}_C \wedge \neg\textbf{rules/voting.procedures}_C$. In this case any proposal regarding changes of rules is endorsed to $v$, with the exception of proposals regarding changes of voting procedures specifically, that are instead brought to the attention of $u$ (see Figure~\ref{fig:endorsing statements}).
+		\begin{figure}[h]
+			\centering
+			\begin{tikzpicture}[fill=gray]
+				% red area
+				\scope
+				\clip (0,0) rectangle (10,5)
+				(3,3) circle (1);
+				\draw[pattern=north west lines, pattern color=red] (0,0) rectangle (10,5);
+				\endscope
+				% gray area
+				\scope
+				\clip (3,3) circle (1);
+				\draw[pattern=north east lines, pattern color=blue] (0,0) rectangle (10,5);
+				\endscope
+				% outline
+				\draw (3,3) circle (1) (1,4)  node [text=black,above] {$\textbf{rules/voting.procedures}_C$}
+				(6,2) circle (1) (8,1)  node [text=black,below] {$\textbf{rules/admission.criteria}_C$}
+				(0,0) rectangle (10,5) node [text=black,above] {$\textbf{rules}_C$};
+			\end{tikzpicture}
+			\caption{The expression $\textbf{rules}_C \wedge \neg\textbf{rules/voting.procedures}_C$ endorses the red area to $v$ and the blue area to $u$.}\label{fig:endorsing statements}
+		\end{figure}
+	\end{example}
+
+	\subsection{The kind ``\textbf{rules}'' and the rules contract}
+		If kinds can be customized to serve some needs, it makes sense for Swarm to propose a basic set of kinds to play with. In particular, the kind \textbf{rules} is maybe the most important one. In fact, every time a project or a collective is created, a ``rules contract'' must be configured, containing all the basic information about the administrative structure of the collective/project one is creating (admission criteria, minimum investment to enter, needed quorum to make a vote valid, minimum percentage of backers to forward a proposal to voting stage, \dots).
+		
+		In particular, the rules contract is modular and relies on other subcontracts, each managing a different aspect of the administrative structure of the social group being defined. These subsections are tagged with subkinds, such as the kinds $\textbf{rules/voting.procedures}_C$ and $\textbf{rules/admission.criteria}_C$ in Example~\ref{ex:subkind}.
+		
+		As we briefly said, there are three types of rules contracts, depending on the social structure they refer to.
+		\begin{itemize}
+			\item The Swarm rules contract, drafted by the Swarm Team itself, and regulating the general social administration of the whole platform. Changes to this contract via liquid democracy are possible, but they should require high thresholds to be passed since said modifications would influence the behavior of the platform as a whole.
+			
+			Moreover, any change proposal to the Swarm rules contract should be carefully audited by the Swarm team that, in exceptional circumstances, should have the right to have it vetoed (for instance, if the contract implies a non-democratic change of behavior on the platform or if it results in some law infringement that may endanger Swarm as a whole).
+			
+			When a change of the Swarm rules is proposed, Swarm takes it into consideration and produces an audit document that gets forwarded to all the platform users along with the proposed changes. The audit document contains an in-dept analysis performed by the Swarm team about what this change of rules should imply. Similarly, if a proposal is vetoed at the end of the audit, a document explaining to users why they will not be able to vote for the proposal should be produced, with a detailed analysis about why this apparent ``violation of the democratic rules'' has been necessary.
+			
+			\item For every project, there is a project rules contract. This contains then name of the project, a brief description of what the project wants to accomplish and the basic settings of all the relevant parameters for the project administration. Since Swarm is responsible for the projects it hosts, they must be audited as well to check if they don't violate Swarm's basic regulations. Again, a project may be blocked by the Swarm team in exceptional circumstances (for instance, if a Project is nothing more than a Ponzi Scheme), and an audit document should be produced.
+			
+			\item For every collective, there is a collective rules contract. This states what that collective is about, which are the requisites to join or leave the collective and the like. Since collectives are nothing more than congregations of users, collective rules and purposes should not be audited by Swarm (if Swarm goes well I'd expect collectives to be A LOT, so auditing any single collective rule contract would put a huge stress on the Swarm legal team).
+		\end{itemize}
+		
+		You can think of rules contracts as the analogous of .conf files that regulate the behavior of some application (in our case a project, a collective or Swarm itself).
+		
+		A very important thing to avoid a nightmarish mess is that all the parameters set in a rules contract are \emph{proprietary}, meaning that these parameters cannot be modified by other contracts. This avoids conflicts between rules contracts and proposals of any other kind that may result in unpredictable behavior. 
+		
+		In particular, this means that the only way to change the administration rules for a social entity is to modify the rules contract itself, making some attack scenarios ineffective. This not being the case, one could perform an attack moving forward a proposal that overwrites some parameters of the rules contract, disguising it for some contract of a less important kind.
+	
+
+\section{Methods}
+	Methods have to be thought of as basic actions between proposals and social entities. More complicated methods can be created composing the basic ones, and some new (local) methods can be created along with a project.
+	
+	\subsection{Methods for $\person$}
+	\renewcommand{\descriptionlabel}[1]{\hspace{\labelsep}{#1}}
+	\begin{description}
+		\item[\emph{join}($C:\collective$):] This method is called when a person $p$ asks to join a collective $C$. 
+%		\begin{lstlisting}
+%			if Background.Check(p) = true, then
+%			for all a: $\person$ in C: $\collective$	
+%				Forward.Vote($\emph{join}(u,C)$, a)
+%			end
+%				if Vote(join($p:\person$,$c:\collective$)) = true, then
+%				Accept(p,c)
+%				
+%		\end{lstlisting}		
+		First, it checks if $p$ satisfies the needed requisites to join the collective (for instance, the collective rules may be such as users with less than a predetermined voting weight in a project have applications rejected by default), defined in the collective rules contract. If these requisites check out, it forwards an approval request to the collective. This approval request is ruled out according to the rules contract (it could be a vote, the collective may have a designated moderator, ...). If the request results into an acceptance, a smart contract denoting $p$ as part of the collective $C$ is produced. Otherwise, a smart contract reporting the failed join attempt by $p$ is produced. This last case may be useful to enforce some other collective rules, such as forbidding to ask to join again if a predetermined amount of time has not passed.
+		
+		\item[\emph{leave}($C:\collective$):] Checks if $p$ is part of the collective $C$. If $p$ is, it checks if according to the rules contract $p$ has the needed requisites to leave (it may be that, for instance, the collective does not allow a member to leave if some conditions are not met). If $p$ has, then it produces a smart contract registering that $p$ has left $C$ or, even better, it triggers some condition in the smart contract produced when $p$ joined $C$ deactivating it.
+		
+		\item[\emph{change}(contract:$\kind$,$C:\collective \mid P:\project \mid \swarm$):] Any user can propose to change an existing contract defined by a collective, a project or Swarm itself. For instance, an user may propose a change of rules for the collective he is in (for instance, change the requirements to join it), for a project he is involved with, or for the Swarm platform itself. According to the relevant rules contract, a proposal may have to be endorsed by other users or collectives, meaning that there is a predefined window of time in which other people have to back up the proposal. If enough endorsement is reached, then the relevant crowd to which the contract is proposed will vote for it as defined by the relevant rules. If the vote passes, the contract becomes active, otherwise it doesn't.
+		
+		This method is particularly useful to propose changes in the rules contract regulating the behavior of some social entity.
+		
+		\item[\emph{propose}(contract:$\kind$,$C:\collective \mid P:\project \mid \swarm$):] Similar to the previous one, but used to propose a new contract that does not need the modification of some existing ones.
+		
+		\item[\emph{endorse}(contract:\kind):] This method registers the fact that a given user has endorsed a proposal.
+		
+		\item[\emph{deendorse}(contract:\kind):] Opposite to \emph{endorse}, retires the endorsement of a proposal that had been endorsed previously.
+		
+		
+		\item[\emph{invest}(P:\project, t:\token):] If the necessary conditions in the rules contract of $P$ are met (minimum amount of the investment and so on), invest a $t$ amount of money in $P$. 
+		
+		\item[\emph{cashback}(p:\project):] The users closes its investment in a project $P$, and receives his amount of tokens or other good as prescribed by the project itself.
+	\end{description}
+	
+	
+
 \end{document}
 
 
