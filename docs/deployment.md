@@ -1,9 +1,9 @@
-#Liquid Democracy Deployment
+# Liquid Democracy Deployment
 
 This document outlines the steps to run liquid democracy app on your own local network. 
 
 
-##Steps 
+## Steps 
 
 1. Download Ethereum Wallet from this link and install on your machine. Make sure that this is this version or with newer version some syntax changes in the contract are required. https://github.com/ethereum/mist/releases/tag/v0.8.10
 1. Install node.js and follow the steps to install keytherum.js node
