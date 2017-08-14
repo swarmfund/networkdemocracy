@@ -167,6 +167,10 @@
 		
 		\item[\emph{leave}($C:\collective$):] Checks if $p$ is part of the collective $C$. If $p$ is, it checks if according to the rules contract $p$ has the needed requisites to leave (it may be that, for instance, the collective does not allow a member to leave if some conditions are not met). If $p$ has, then it produces a smart contract registering that $p$ has left $C$ or, even better, it triggers some condition in the smart contract produced when $p$ joined $C$ deactivating it.
 		
+		\item[\emph{createCollective}($C:\collective$, ($P:\project$), contract:$\textbf{rules}_C$):] Creates a collective $C$, whose administration is specified in the contract ``contract'' having type $\textbf{rules}_C$. The field ($P:\project$) is optional. If specified, the collective $C$ is created locally as a sub-entity of the project $P$.
+		
+		\item[\emph{createProject}($P:\project$, contract:$\textbf{rules}_C$):] Proposes a project to the Swarm Team, that audits it. If the project is approved, then it is created. (Actually I am not sure this is the right way to do it. Probably it would be better if to create a project someone should directly mail the relevant part of the team and talk about this.)
+		
 		\item[\emph{change}(contract:$\kind$,$C:\collective \mid P:\project \mid \swarm$):] Any user can propose to change an existing contract defined by a collective, a project or Swarm itself. For instance, an user may propose a change of rules for the collective he is in (for instance, change the requirements to join it), for a project he is involved with, or for the Swarm platform itself. According to the relevant rules contract, a proposal may have to be endorsed by other users or collectives, meaning that there is a predefined window of time in which other people have to back up the proposal. If enough endorsement is reached, then the relevant crowd to which the contract is proposed will vote for it as defined by the relevant rules. If the vote passes, the contract becomes active, otherwise it doesn't.
 		
 		This method is particularly useful to propose changes in the rules contract regulating the behavior of some social entity.
@@ -179,12 +183,13 @@
 		
 		\item[\emph{delegate}($k:\kind, u:\person$):] This method delegates another user $u$ for the voting of contracts of type $k$.
 		
-		\item[\emph{undelegate}($k:\kind$):] Opposit of \emph{delegate}, retires the delegation for a kind $k$.
+		\item[\emph{undelegate}($k:\kind$):] Opposite of \emph{delegate}, retires the delegation for a kind $k$.
 		
 		
 		\item[\emph{invest}(P:\project, t:\token):] If the necessary conditions in the rules contract of $P$ are met (minimum amount of the investment and so on), invest a $t$ amount of money in $P$. 
 		
 		\item[\emph{cashback}(p:\project):] The users closes its investment in a project $P$, and receives his amount of tokens or other goods as prescribed by the project itself.
+		
 		
 		
 	\end{description}
