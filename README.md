@@ -1,6 +1,6 @@
 # Overview
 
-This repository consists of an implementation of  "network democracy" as described in the Swarm Fund whitepaper and a proposal for a generic liquid democracy protocol that would be statebox-compatible, blockchain agnostic, and conform to theoretical advances in game theory and other fields.
+This repository consists of an implementation of "network democracy" as described in the Swarm Fund whitepaper and a proposal for a generic liquid democracy protocol that would be statebox-compatible, blockchain agnostic, and conform to advances in game theory and other fields.
 
 ## Protocol Spec
 
@@ -22,14 +22,17 @@ geth --rpc --rpcaddr="0.0.0.0"  --datadir "some folder" --port 30301 --rpcport 8
 
 Run node with following file. 
 You will also need to update addresses in that file to your Ethereum address. 
+
 node/userRegistration.js
 
 
 Deploy contract using Ethereum Wallet which is found here. Copy address of this contract, you will need it when deploying second contract. 
+
 ../sol/SimpleToken.sol
 
 
 Deploy contract using Ethereum Wallet which is found here. Use address from previous contract as input when deploying it. 
+
 sol/DSociety.sol
 
 
@@ -40,6 +43,9 @@ Run local web server to be able to resolve location stored in file in 8)
 
 Now run the app ../pages/index.html
 
+## Past versions
 
+Some past versions of these same concepts were circulated from '14-16 here:
+https://github.com/fractastical/distributed-governance
 
 
