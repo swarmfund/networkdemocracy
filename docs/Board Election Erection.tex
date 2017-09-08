@@ -1,0 +1,150 @@
+\documentclass[submission, copyright,creativecommons,sharealike,noncommercial]{eptcs}
+\providecommand{\event}{Swarm group}
+
+\newcommand{\yourpath}{Preambles/}
+\usepackage{import}
+\usepackage{eufrak}
+\subimport{\yourpath/}{packages}
+\subimport{\yourpath/}{macros}
+\subimport{\yourpath/}{tikzstyles}
+
+\subimport{Preambles/}{LocalDefinitions}
+
+
+\title{Delegated Range Voting with Tokens and Shit}
+\author{Fabrizio Romano Genovese
+	\institute{Quantum Group \\ University of Oxford}
+	\email{fabrizio.genovese@cs.ox.ac.uk}
+}
+\def\titlerunning{Liquid Democracy -- Concrete proposal}
+\def\authorrunning{F.R.Genovese}
+
+
+\begin{document}
+
+%	\bibliographystyle{eptcs}
+	
+	\maketitle
+
+	\begin{abstract}
+		After some brainstorming sessions in which the main ideas have been laid down, we start drafting how a hypothetical Liquid Democracy implementation for Swarm could look in technical terms. We will use a typed approach, that should in principle be compatible with the concepts behind StateBox.
+	\end{abstract}
+
+\section{Why voting with tokens as it is is not a good idea}
+	The standard voting with tokens works like this: Everyone obtains some voting tokens in some way (for instance, one receives an amount of voting tokens equal to the tokens owned). These tokens then get sent to an address that fundamentally means ``yes'' or ``no''. Tokens sent in any address are then counted and a decision is made. This has three fundamental problems:
+	\begin{enumerate}
+		\item This voting procedure is basically majority voting, that is super flawed.
+		\item In the very same moment someone votes, the tokens are transferred to the other address and can be publicly seen. This means that a sufficiently skilled user is able to see in real time who is winning the vote. This is very bad because gives away data useful for any kind of manipulation.
+		\item If a voter sends his ``real'' tokens to someone else, he retains his voting tokens. This means that the other person receiving the tokens has no voting power whatsoever. On the other hand, the person retaining the voting tokens has less or no stake at all.
+		
+		For instance, someone with a lot of real tokens could sell them all, and then use the voting tokens he retained to vote for a very bad decision for the platform. At this point the tokens he just sold will be depreciated because of this bad decision and the person will be able to buy them back at a fraction of the price, making a profit. This means that a very powerful user on the platform can exploit the democratic infrastructure to make direct profits.
+		
+		\item Delegation can be a mess.
+	\end{enumerate}
+
+\section{A fix for this shit}
+	As I argued multiple times, a fix for point 1 is adopting other voting procedures, such as range voting. We will then try to understand how to implement range voting with a tokens-and-shit approach.
+	
+	I am giving for granted that you know how range voting works. If you don't, read about it on the other PDF or on Wikipedia. As an alternative, just fuck yourself.
+	
+	\begin{definition}\label{voting string}
+		Suppose we have a set $\mathcal{N}$ of candidates. Suppose moreover we have a set $\mathfrak{M}$ of possible voting values. For instance, if we have three people proposing (call them $A, B, C$) and the user can rate every one of these people from $-3$ to $-3$, then $\mathcal{N} := \{A, B, C\}$ and $\mathfrak{M} := \{-3,-2,-1,0,1,2,3\}$, hence $|\mathcal{N}| = 3$ and $|\mathfrak{M}|=7$.
+		
+		We can express the voting of a user as a string $(a,b,c)$, where $a,b,c \in \mathfrak{M}$. $a$ represents the rating given to candidate $A$, $b$ the rating given to candidate $B$ and $c$ the rating given to candidate $C$. This string is called \emph{voting string}.
+	\end{definition}
+	\begin{definition}
+ 		We denote an user $A$ delegating his/her vote to a user $B$ with $A \to B$.
+	\end{definition}
+	
+	\subsection{The algorythm}
+		Here we draft an algorythm to take care of voting. An analysis of this algorythm will be given in the next section.
+		\subsubsection{Phase 1: Submitting candidatures}
+		
+		\begin{itemize}
+			\item A contract called $\textbf{CANDIDATES}$ is created. This contract determines from when to when voting is open and is fundamentally a list of strings representing the candidates;
+			
+			\item An user that wants to run for the election writes a bio and a covering letter and he signs this with his/eth ethwallet private key.
+			
+			\item The user adds to a public contract a line like this:
+			\[
+			(\text{ethwallet} \mid \text{hash of the bio} \mid \text{hash of the covering letter})
+			\]
+		\end{itemize}
+		
+		\subsubsection{Guardians and private keys}
+			\begin{itemize}
+				\item A public key is created out of two secret keys, that will be kept by two different trusted parties (us and the tokensale guys, for instance);
+				
+				\item The public key is denoted with $pub$, while the secret keys are denoted with $sec_1$ and $sec_2$, respectively;
+				
+			\end{itemize}
+		\subsubsection{Voting window}
+			\begin{itemize}
+				\item Every person owning an eth wallet (even with no swarm tokens in it) can submit a vote. Every user can see who are the candidates running on our dedicated website. The website just displays the addresses of all the candidates along with their bios and covering letters. The fact that $\textbf{CANDIDATES}$ contains this information ensures that we are not providing incorrect/manipulated information about the candidates.
+				
+				\item An eth contract, called $\textbf{VOTE}$, is created on the blockchain. This contract determines from when to when voting is open and is fundamentally a list of strings representing the users votes.
+				
+				\item The user vote is a string defined as follows: 
+				\[
+				(\text{user wallet address}, \text{voting string}, \text{delegation address})
+				\]
+				Where:
+				\begin{description}
+					\item[user wallet address] is the eth address of the voter;
+					\item[voteing string] is a string defined as in Definition~\ref{voting string}, where $\mathfrak{M}$ is the set of all the addresses in \textbf{CANDIDATES}. To be specific, the first entry of the voting string refers to the first candidate in $\textbf{CANDIDATES}$, the second to the second candidate in \textbf{CANDIDATES} and so on.
+					
+					\item[delegation address] is an eth address.
+					
+					\item vote string and delegation address are set to some standard value ($0$ for eth address) and $(0,0, \dots, 0)$ for the vote string) if the user does not specify any value.
+				\end{description}
+			
+				\item The user encrypts this string using $pub$ and adds the line to $\textbf{VOTE}$.
+			\end{itemize}
+		
+		\subsubsection{Outcome}
+			\begin{itemize}
+				\item When the voting window closes, the outcome of the vote is calculated. The secret keys $sec_1$ and $sec_2$ are made public and added to $\textbf{VOTE}$. With this information, any user can decrypt the content of $\textbf{VOTE}$.
+				
+				\item The outcome is calculated as follows: First of all we have to check that all the delegations are correct. This means we have to rule out cases in which there are delegation loops, i.e. we have to deal with situations like $A \to B \to C \to A$ where we have a loop and it is not clear who is voting for who. To do this we apply the following algorythm:
+				
+				\begin{itemize}
+					\item First, we decrypt $\textbf{VOTE}$ and we copy its content to $\textbf{VOTE'}$. $\textbf{VOTE'}$ is basically a huge database with all the addresses of who voted, their voting preference and the delegation address specified. 
+					
+					\item Call $a,b,\dots$ the entries in \textbf{VOTE'}. Starting from $a$, we form a string called \emph{check} as follows:
+					\begin{itemize}
+						\item The first entry of \emph{check} is $a[1]$ (user wallet address).
+				
+						\item The next entry of \emph{check} is $a[3]$ (the delegation address).
+				
+						\item If $a[3]=0$ then the algorithm terminates and we run it on the next entry in $\textbf{VOTE'}$. Otherwise we scroll down \textbf{VOTE'} until we find an entry $n$ such that $n[1] = a[3]$ (we check if the delegated address has voted). If this string does not exists, we then modify \textbf{VOTE'} setting $a[3] = 0$ (delegation is not valid), otherwise we keep going checking if there is a $n'$ such that $n'[1] = a[3]$ and so on.
+						
+						\item At every step, we check if \emph{check} has repeated entries. Suppose we find that this is true, meaning that \emph{check} looks like $(a,b,x,c,d, \dots, f, x)$. In this case we modify \textbf{VOTE'} setting $x[3] = c[3] = \dots = f[3] = 0$ (we eliminate the loop setting all the delegations in the loop as not valid); then the algorithm terminates and we run it on the next entry in $\textbf{VOTE'}$. If this doesn't happen, then eventually we reach the end of \textbf{VOTE'} and we run this algorythm on the next entry on \textbf{VOTE'}.
+					\end{itemize}
+				
+				\item At the end of this process, \textbf{VOTE'} will be free of delegation loops. At this point we calculate the outcome as follows:
+					\begin{itemize}
+						\item For every string $n$ we check that $n[2]$ is a valid voting string (meaning that every entry in $n[2]$ is in $\mathcal{N}$. If this is not the case we set $n[2]$ to $0$.
+					
+						\item For every string $n$, call $\sigma_{n[1]}$ the stake of $n[1]$. If $n[3] = 0$ (no delegation), then $n[2] = \sigma_n n[2]$). If $n[3] = a$, then $n[2] = 0$ and $\sigma_{k[1]} = \sigma_{n[1]} + \sigma_{k[1]}$ (we transfer the stake to the delegated user), where $k$ is the entry such that $k[1] = 1$ (having eliminated loop there is only one such string $k$).
+						
+						
+						\item We calculate the string \emph{outcome} as $\sum_{n \in \textbf{VOTE}} n[2]$ (we are summing all the points in all the voting strings componentwise).
+						
+						\item The elected candidates are the ones with the highest amount of points in \emph{outcome}. For instance, if $\emph{outcome} = (234, 152, 36)$ then the candidate corresponding to the first string entry is the winner.
+						
+						\item We have to elect three candidates for the board. We proceed as follows: We consider the three candidates having the biggest amount of points. If these are more than three, we further order them considering their stake, meaning that if $A,B$ have the same amount of points but the stake of $A$ is bigger than the stake of $B$, then $A$ is preferred. If we still have more than three candidates ex-aequo, then we randomly chose three.
+					\end{itemize}
+				\end{itemize}
+			\end{itemize}
+
+	\subsection{Analysis}
+		With this algorithm we solve a shitload or problems. No one is able to see who voted for who and what is the delegation structure until the vote ends. The fact that the public key is obtained from two different secret keys means that not even the guardians are able to do this alone. The guardians should agree to fuck the platform sharing their secret keys and accessing the votes outcome while the voting window is still open. This is obviously possible and this is why the guardians should be two trusted and independent entities.
+		
+		Users are able to delegate their vote to someone. If this delegation doesn't work well (loops, the delegate didn't vote) then the system falls back on the user preference. This means that if your delegate is a dickhead your vote is not wasted.
+		
+		Since the stake is taken to be the one at the closing of the voting window, people cannot really fiddle with their token in the hope to increase their voting stake. Moreover, the voting is not made sending tokens to this or that address, and no tokens are locked in the process, so everyone can move his/her tokens as he/she pleases during a voting. The only thing to keep in mind is that your stake will be the one at the end of the closing window.
+		
+		
+\end{document}
+
+
