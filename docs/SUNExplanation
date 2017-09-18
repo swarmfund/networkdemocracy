@@ -1,0 +1,39 @@
+Brief explanation of how SUN Tokens work according to me and Joel
+
+### PROJECTS ###
+As we know, Swarm is about real world assets. Someone that wants financing to launch a project goes to Swarm. The Swarm crowd votes if this project has to be "accepted" or not. If the project is accepted, it receives funding by Bitadel (the way to quantify this has still to be defined). 
+
+Most important: The project managers sign an agreement that says that they can get money only through the Bitadel hedge fund. The idea here is that if you want to invest in a project that is associated with Swarm, you have to go through Bitadel.
+	This means, for instance, that old-world finance cannot do what they usually do, that is, storm in, buy everything and steal our projects. This legal agreement avoids exactly this.
+
+### BITADEL ###
+Bitadel is Swarm's (crypto) hedge fund. What they do is:
+- They take your money (Dollars, Ether, Whatever)
+- They use this money to make investments (that is, they dump this money into this and that project)
+- Every n days they give you back some earnings.
+- Since Bitadel will manage your money for you, it will take a fee for this service (yet to be determined).
+
+### SUN TOKENS ###
+Sun tokens are entities that allow you to be independent on the swarm platform. A SUN token has a nominal value of ONE dollar, that you can allocate to whatever project you like. What a SUN tokens represents is a statement like "Bitadel, put one dollar on this project on my behalf." 
+
+## PURCHASING SUN TOKENS ###
+SUN tokens can be purchased through Bitadel. Basically you can pay in fiat/ether/whatever and receive SUN tokens in exchange. When you put your SUN Tokens into some project (call it X) these SUN Tokens are burnt, and Bitadel puts an equivalent amount of money on X on your behalf. Since in this case you are managing your own money, Bitadel will not take any fee from investments made with SUN Tokens.
+
+### The value of Swarm ###  
+Clearly, you have now two ways to invest into swarm projects: The first is by giving your money directly to Bitadel, the second (more convenient) is by purchasing SUN tokens and deciding on what project you want to drop them. But here is the catch: You need Swarm Tokens to be able to purchase and use SUN tokens. 
+	Essentially, if you want to purchase SUN tokens you go to Bitadel and tell them "Here is my money, give me SUN Tokens". At this point Bitadel checks how many Swarm Tokens you have and answers "You have X Swarm Tokens. Hence we can give you a maximum of Y SUN Tokens". 
+	This means that if you have one million dollars and a number of Swarm tokens that allows you to purchase only 10k SUN Tokens, then you can only buy 10k of SUN Tokens. You can then either drop your remaining 9.990.000 dollars directly into Bitadel or shove them up your arse. Assuming that you go for the first choice, this means that you will have 10 millions invested into Swarm projects: You will be able to freely move 10K of these 10 millions, while Bitadel will move the remaining 9.990.00 for you (and will take fees out of them for this service).  
+
+
+### OLD WORLD INVESTORS ###
+If you are an old world investor (that is, you did not take part to the ICO sale), then you can only drop money into Bitadel, watch Bitadel do its magic and get some money back. If you want to avoid paying bitadel fees and you want to be able to move your money as you please, then you will have to buy enough Swarm tokens for someone else. This will clearly drive Swarm Tokens price to the moon since not many Swarm tokens will be minted after the ICO sale. This kind of scarcity is what makes Swarm ICO attractive for investors.
+
+### ICO INVESTOR ###
+If you invest in the ICO you get:
+- Swarm Tokens
+- A number of SUN Tokens calculated as follows:
+	(Swarm Tokens)*(Token price at the moment of purchase)
+So for instance if you buy 10K Swarm Tokens when they are 2 dollars each, you automatically receive 20k SUN Tokens.
+
+### ANALYSIS ###
+In this model, the value of SUN tokens is given by the ability of self-governing your own investments, avoiding Bitadel's management fees. In particular, this prevents old world finance to storm into our system taking it over: Old world finance can still put money into Swarm projects, but doesn't obtain any kind of governance out of this. Moreover, Swarm projects cannot be "stolen" by old world finance since they are legally bound to accept money only from Bitadel. Long story short, it doesn't matter how much money does old world finance put into a project, that project will still belong to Swarm. It is my opinion that this countermeasure is necessary if we don't want to be completely stormed/bought/absorbed by some JP Morgan-like twat as long as Swarm becomes successful. Also, in this way the people retaining governance and the right to vote on the Swarm platform will be the people that believed in the project from the beginning: Decision power will stay in the hands of those who have a vision and will be very difficult to "buy" later on.
