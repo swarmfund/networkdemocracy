@@ -12,9 +12,9 @@
 
 
 \title{Delegated Range Voting with Tokens and Shit}
-\author{Fabrizio Romano Genovese
-	\institute{Quantum Group \\ University of Oxford}
-	\email{fabrizio.genovese@cs.ox.ac.uk}
+\author{Fabrizio Romano Genovese, Jelle Herold
+	\institute{Swarm Team}
+	\email{fabrizio@swarm.com jelle@swarm.com}
 }
 \def\titlerunning{Liquid Democracy -- Concrete proposal}
 \def\authorrunning{F.R.Genovese}
@@ -69,18 +69,20 @@
 			\[
 			(\text{ethwallet} \mid \text{hash of the bio} \mid \text{hash of the covering letter})
 			\]
+			
+			\item When the window closes, every new submission is rejected. 
 		\end{itemize}
 		
 		\subsubsection{Guardians and private keys}
 			\begin{itemize}
 				\item A public key is created out of two secret keys, that will be kept by two different trusted parties (us and the tokensale guys, for instance);
 				
-				\item The public key is denoted with $pub$, while the secret keys are denoted with $sec_1$ and $sec_2$, respectively;
+				\item The public key is denoted with $pub$, while the secret keys are denoted with $sec_1$ and $sec_2$, respectively. It makes sense to give one of these secret keys to the Estonian non-profit organization that oversees Swarm, if possible.
 				
 			\end{itemize}
 		\subsubsection{Voting window}
 			\begin{itemize}
-				\item Every person owning an eth wallet (even with no swarm tokens in it) can submit a vote. Every user can see who are the candidates running on our dedicated website. The website just displays the addresses of all the candidates along with their bios and covering letters. The fact that $\textbf{CANDIDATES}$ contains this information ensures that we are not providing incorrect/manipulated information about the candidates.
+				\item Every person owning an eth wallet (even with no swarm tokens in it) can submit a vote. Every user can see who are the candidates running on our dedicated website. The website just displays the addresses of all the candidates along with their bios and covering letters, ordered by their stake. The fact that $\textbf{CANDIDATES}$ contains this information ensures that we are not providing incorrect/manipulated information about the candidates.
 				
 				\item An eth contract, called $\textbf{VOTE}$, is created on the blockchain. This contract determines from when to when voting is open and is fundamentally a list of strings representing the users votes.
 				
@@ -91,11 +93,11 @@
 				Where:
 				\begin{description}
 					\item[user wallet address] is the eth address of the voter;
-					\item[voteing string] is a string defined as in Definition~\ref{voting string}, where $\mathfrak{M}$ is the set of all the addresses in \textbf{CANDIDATES}. To be specific, the first entry of the voting string refers to the first candidate in $\textbf{CANDIDATES}$, the second to the second candidate in \textbf{CANDIDATES} and so on.
+					\item[voting string] is a string defined as in Definition~\ref{voting string}, where $\mathfrak{M}$ is the set of all the addresses in \textbf{CANDIDATES}. To be specific, the first entry of the voting string refers to the first candidate in $\textbf{CANDIDATES}$, the second to the second candidate in \textbf{CANDIDATES} and so on.
 					
 					\item[delegation address] is an eth address.
 					
-					\item vote string and delegation address are set to some standard value ($0$ for eth address) and $(0,0, \dots, 0)$ for the vote string) if the user does not specify any value.
+					\item vote strings and delegation addresses are set to some standard value ($0$ for eth address) and $(0,0, \dots, 0)$ for the vote string) if the user does not specify any value.
 				\end{description}
 			
 				\item The user encrypts this string using $pub$ and adds the line to $\textbf{VOTE}$.
@@ -105,27 +107,42 @@
 			\begin{itemize}
 				\item When the voting window closes, the outcome of the vote is calculated. The secret keys $sec_1$ and $sec_2$ are made public and added to $\textbf{VOTE}$. With this information, any user can decrypt the content of $\textbf{VOTE}$.
 				
-				\item The outcome is calculated as follows: First of all we have to check that all the delegations are correct. This means we have to rule out cases in which there are delegation loops, i.e. we have to deal with situations like $A \to B \to C \to A$ where we have a loop and it is not clear who is voting for who. To do this we apply the following algorythm:
+				\item The outcome is calculated as follows: First, we decrypt $\textbf{VOTE}$ and we copy its content to $\textbf{VOTE'}$. $\textbf{VOTE'}$ is basically a huge database with all the addresses of people who voted, their voting preference and the delegation address specified. 
+				
+				\item We check that no one used the Swarm foundation address to vote. Since the foundation owns like 33\% of the total swarm tokens, this would be very unfair: Partners can of course vote with their personal wallets but not with the foundation one. Hardcoding this guarantees transparency both for the partners and for the investors.
+				
+				We scroll $\textbf{VOTE'}$ and check the first address of each string. If a string starting with the Swarm foundation eth address is found, we erase it. We keep doing this until we reach the bottom of the contract. 
+				
+				\item After this, we have to check that people did not vote two times. This is easy: We scroll the $\textbf{VOTE'}$ database again and check the first address of each string (voter's address). If two or more strings have the same voting address, only the most recent is kept. Since strings are added as votes come, we just have to erase all but the bottommost one.
+			
+				\item Then we check that all the delegations are correct. This means we have to rule out cases in which there are delegation loops, i.e. we have to deal with situations like $A \to B \to C \to A$ where we have a loop and it is not clear who is voting on behalf of who. To do this we apply the following algorithm:
 				
 				\begin{itemize}
-					\item First, we decrypt $\textbf{VOTE}$ and we copy its content to $\textbf{VOTE'}$. $\textbf{VOTE'}$ is basically a huge database with all the addresses of who voted, their voting preference and the delegation address specified. 
-					
-					\item Call $a,b,\dots$ the entries in \textbf{VOTE'}. Starting from $a$, we form a string called \emph{check} as follows:
+					\item Call $a,b,\dots$ the entries in $\textbf{VOTE'}$. Starting from $a$, we form a string called \emph{check} as follows:
 					\begin{itemize}
 						\item The first entry of \emph{check} is $a[1]$ (user wallet address).
 				
 						\item The next entry of \emph{check} is $a[3]$ (the delegation address).
 				
-						\item If $a[3]=0$ then the algorithm terminates and we run it on the next entry in $\textbf{VOTE'}$. Otherwise we scroll down \textbf{VOTE'} until we find an entry $n$ such that $n[1] = a[3]$ (we check if the delegated address has voted). If this string does not exists, we then modify \textbf{VOTE'} setting $a[3] = 0$ (delegation is not valid), otherwise we keep going checking if there is a $n'$ such that $n'[1] = a[3]$ and so on.
+						\item If $a[3]=0$ then the algorithm terminates and we run it on the next entry in $\textbf{VOTE'}$. Otherwise we scroll down \textbf{VOTE'} until we find an entry $n$ such that $n[1] = a[3]$ (we check if the delegated address has voted). If this string does not exists, we then modify \textbf{VOTE'} setting $a[3] = 0$ (delegation is not valid). If it exists, we add $n[1]$ to \emph{check}.
 						
-						\item At every step, we check if \emph{check} has repeated entries. Suppose we find that this is true, meaning that \emph{check} looks like $(a,b,x,c,d, \dots, f, x)$. In this case we modify \textbf{VOTE'} setting $x[3] = c[3] = \dots = f[3] = 0$ (we eliminate the loop setting all the delegations in the loop as not valid); then the algorithm terminates and we run it on the next entry in $\textbf{VOTE'}$. If this doesn't happen, then eventually we reach the end of \textbf{VOTE'} and we run this algorythm on the next entry on \textbf{VOTE'}.
+						\item We re-run the same procedure starting from $n[1]$.
+						
+						\item At every step, we check if \emph{check} has repeated entries. Two things can happen:
+						
+						\begin{itemize}
+							\item If we find that repeated entries, then \emph{check} will look like $(a,b,x,c,d, \dots, f, x)$. In this case we modify \textbf{VOTE'} setting $x[3] = c[3] = \dots = f[3] = 0$ (we eliminate the loop setting all the delegations in the loop as not valid); 
+							then we start again using the string immediately following $a$.
+							
+							\item If we don't find repeated entries, we eventually reach the end of \textbf{VOTE'}. In this case we start again using the string immediately following $a$.
+						\end{itemize} 
 					\end{itemize}
 				
 				\item At the end of this process, \textbf{VOTE'} will be free of delegation loops. At this point we calculate the outcome as follows:
 					\begin{itemize}
-						\item For every string $n$ we check that $n[2]$ is a valid voting string (meaning that every entry in $n[2]$ is in $\mathcal{N}$. If this is not the case we set $n[2]$ to $0$.
+						\item For every string $n$ we check that $n[2]$ is a valid voting string, meaning that all the points assigned are in the correct range and the number of entries in the string equals the number of candidates. Mathematically, this means that every entry in $n[2]$ is in $\mathfrak{M}$ and that the lenght of $n$ is $|\mathcal{N}|$. If this is not the case we set $n[2]$ to the string made of $|\mathcal{N}|$ entries in which every entry is $0$. We will denote this string just with $\mathbf{0}$.
 					
-						\item For every string $n$, call $\sigma_{n[1]}$ the stake of $n[1]$. If $n[3] = 0$ (no delegation), then $n[2] = \sigma_n n[2]$). If $n[3] = a$, then $n[2] = 0$ and $\sigma_{k[1]} = \sigma_{n[1]} + \sigma_{k[1]}$ (we transfer the stake to the delegated user), where $k$ is the entry such that $k[1] = 1$ (having eliminated loop there is only one such string $k$).
+						\item For every string $n$, call $\sigma_{n[1]}$ the stake of $n[1]$. If $n[3] = 0$ (no delegation), then $n[2] = \sigma_{n[1]} n[2]$, meaning that we multiply every entry of $n[2]$ by $\sigma_{n[1]}$. If $n[3] = a$, then $n[2] = \mathbf{0}$ and $\sigma_{k[1]} = \sigma_{n[1]} + \sigma_{k[1]}$ (we transfer the stake to the delegated user), where $k$ is the entry such that $k[1] = a$ (having eliminated loops there is only one such string $k$).
 						
 						
 						\item We calculate the string \emph{outcome} as $\sum_{n \in \textbf{VOTE}} n[2]$ (we are summing all the points in all the voting strings componentwise).
