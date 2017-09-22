@@ -77,14 +77,63 @@ Jelle Herold
 			
 			\item When the window closes, every new submission is rejected. 
 		\end{itemize}
-		
+
+
+		\subsubsection{Phase 0: Submitting token vesting parameters}
+			All bought tokens are vested according to a function described in the
+			whitepaper. This function takes two parameters and for each
+			there is a given set of allowed values with size $< 6$, say.
+
+			\begin{itemize}
+			\item number of periods, taken from $X$
+			\item days per period, taken from $Y$
+			\end{itemize}
+
+
+			We set $\mathcal{N}$ to all $|X|\cdot|Y|$ possible pairs
+			$\langle x_i, y_j \rangle \elem X \times Y$ and
+			$|\mathfrak{M}|=7$, say.
+
+			The UI shows all these pairs as a matrix $A=v^i_j$
+			and the user clicks on their preference.
+
+			We then apply a function $f: X \times Y \to A$ to
+			some vote $(x,y)$ which computes some ``gradient''
+			focussed around the vote, for example distance:
+
+			\[
+			v^i_j \mapsto round(3 - min(7, c*(abs(x-i)^d * abs(y-j)^d)))
+			\]
+			(Might also use $+$, or distance to target duration $x*y$).
+
+			The two parameters $c$ and $d$ can be used to encode the
+			shape over the vode.  We can encode a vote as a number of
+			applications of this function to the matrix.
+
 		\subsubsection{Guardians and private keys}
 			\begin{itemize}
 				\item A public key is created out of two secret keys, that will be kept by two different trusted parties (us and the tokensale guys, for instance);
 				
 				\item The public key is denoted with $pub$, while the secret keys are denoted with $sec_1$ and $sec_2$, respectively. It makes sense to give one of these secret keys to the Estonian non-profit organization that oversees Swarm, if possible.
-				
 			\end{itemize}
+
+		\subsubsection{Voting and some issues}
+			If we use the Shamir secret sharing scheme, there is the
+			assumption of having a trusted ``dealer'',
+			the party generating and handling out $sec_i$.
+
+			Voting itself is done by sending a transaction from a
+			wallet. The balance in the wallet is used to weight the
+			vote.
+
+			Therefor, wallets on an exchange preclude the owner from
+			voting as the exchange holds the private key. Instead the
+			exchange can vote with the users swarm.
+
+			The vote data itself has to be encrypted. The contract
+			cannot check if the data is correct but has to accept
+			it at face value (basic prefix check could be performed).
+
 		\subsubsection{Voting window}
 			\begin{itemize}
 				\item Every person owning an eth wallet (even with no swarm tokens in it) can submit a vote. Every user can see who are the candidates running on our dedicated website. The website just displays the addresses of all the candidates along with their bios and covering letters, ordered by their stake. The fact that $\textbf{CANDIDATES}$ contains this information ensures that we are not providing incorrect/manipulated information about the candidates.
