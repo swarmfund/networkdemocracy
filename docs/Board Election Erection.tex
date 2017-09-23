@@ -10,8 +10,10 @@
 
 \subimport{Preambles/}{LocalDefinitions}
 
+\newcommand{\candidates}{\ensuremath{\mathcal{C}} \xspace} 
+\newcommand{\range}{\ensuremath{\mathfrak{R}}\xspace}
 
-\title{Delegated Range Voting with Tokens and Shit}
+\title{Liquid Democracy Voting System for the Swarm Platform}
 \author{Fabrizio Romano Genovese
 	\institute{Swarm Team}
 	\institute{Quantum Group \\ University of Oxford}
@@ -23,7 +25,7 @@ Jelle Herold
 }
 \def\titlerunning{Liquid Democracy -- Concrete proposal}
 \def\authorrunning{F.R.Genovese \& J. Herold}
-
+\usepackage{wrapfig}
 
 \begin{document}
 
@@ -32,30 +34,132 @@ Jelle Herold
 	\maketitle
 
 	\begin{abstract}
-		After some brainstorming sessions in which the main ideas have been laid down, we start drafting how a hypothetical Liquid Democracy implementation for Swarm could look in technical terms. We will use a typed approach, that should in principle be compatible with the concepts behind StateBox.
+		Here we highlight how the voting system is going to work. We will start briefly reviewing existent solutions, we will proceed sketching the general idea for the voting system on the Swarm Platform and, finally, we will dive into details producing a working algorithm.
 	\end{abstract}
 
-\section{Why voting with tokens as it is is not a good idea}
-	The standard voting with tokens works like this: Everyone obtains some voting tokens in some way (for instance, one receives an amount of voting tokens equal to the tokens owned). These tokens then get sent to an address that fundamentally means ``yes'' or ``no''. Tokens sent in any address are then counted and a decision is made. This has three fundamental problems:
+\section{Pre-existent solutions}\label{sec:Pre-existent solutions}
+	The need to define a voting system is not a new problem for the blockchain community. For instance, if some altcoin is going to hard fork, the developing team will often ask the user base to express a preference about which branch to adopt. It is obvious, then, that in a situation like this some kind of procedure has to be devised to allow people to express this preference, that is, to allow people to vote.
+	
+	One of the most common ways to deal with this problem is by issuing some voting tokens and creating two addresses that stand for \emph{yes} and \emph{no}. Every user receives a number of tokens equal to the number of coins owned and sends them to one of these two addresses, expressing a preference.
+	
+	Albeit very simple to implement, this method has many fundamental flaws that make it not suitable for a system that has democracy -- and hence voting -- at its center:
 	\begin{enumerate}
-		\item This voting procedure is basically majority voting, that is super flawed.
-		\item In the very same moment someone votes, the tokens are transferred to the other address and can be publicly seen. This means that a sufficiently skilled user is able to see in real time who is winning the vote. This is very bad because gives away data useful for any kind of manipulation.
-		\item If a voter sends his ``real'' tokens to someone else, he retains his voting tokens. This means that the other person receiving the tokens has no voting power whatsoever. On the other hand, the person retaining the voting tokens has less or no stake at all.
 		
-		For instance, someone with a lot of real tokens could sell them all, and then use the voting tokens he retained to vote for a very bad decision for the platform. At this point the tokens he just sold will be depreciated because of this bad decision and the person will be able to buy them back at a fraction of the price, making a profit. This means that a very powerful user on the platform can exploit the democratic infrastructure to make direct profits.
+		\item First of all, a voting procedure like the one highlighted above is very similar to majority voting and, as such, it is cursed by many downsides. One of the biggest achievement of social choice theory is proving that many of the voting systems that people intuitively consider ``fair'' are not fair at all, meaning that they are prone to any sort of manipulation [] or can even be dictatorial []. Voting with tokens as stated above is no exception. 
 		
-		\item Delegation can be a mess.
+		\item In the very same moment someone votes, the tokens are transferred to the address expressing a preference, and can be publicly seen. This means that a sufficiently skilled user is able to see in real time who is winning the vote. This exposes the system because gives away data that can be employed for any kind of manipulation.
+		
+		\item ``Real'' tokens can be exchanged while the voting ones remain in one's wallet. This means that voting power is not really related to the quantity of money one owns: In a transaction happening after the voting tokens are issued, the person receiving the real tokens has no voting power whatsoever while, on the other hand, the other person retains the voting power without having real stake.
+		
+		For instance, someone with a lot of real tokens could sell them all, and then use the voting tokens he retained to vote for a very bad decision for the platform. At this point the tokens he just sold will be depreciated because of this bad decision and the person will be able to buy them back at a fraction of the price, making a profit. 
+		
+		This means that a very powerful user on the platform could exploit the democratic infrastructure to make direct profits.
+		
+		\item There is no reputation system. This means that a user voting power is only proportional to the amount of coins owned. A lot of important parameters (how active that user is on the platform, how much money one moves every month, how much that user helped with proposals, \dots) are completely disregarded.
+		
+		\item Vote delegation is messy, or even not impossible.
 	\end{enumerate}
+	For these reasons we deemed necessary to steer away from all the pre-existing solutions and design an ad-hoc voting environment that is reasonably fair (according to social choice theory) and suitable to be used on a daily basis.
 
-\section{A fix for this shit}
-	As I argued multiple times, a fix for point 1 is adopting other voting procedures, such as range voting. We will then try to understand how to implement range voting with a tokens-and-shit approach.
+\section{Range Voting}
+
+	\begin{wrapfigure}{r}{0.5\textwidth}
+		\vspace{-10pt}
+		\begin{center}
+			\includegraphics[width=0.48\textwidth]{Voting_Ballot.png}
+		\end{center}
+		\vspace{-15pt}
+		\caption{Range voting ballot [source: Wikipedia]}
+		\vspace{-5pt}
+	\end{wrapfigure}
+
+	The voting method we choose for the platform is \emph{range voting}. Range voting is one of the fairest voting systems available. In particular, being it a \emph{cardinal} and not an \emph{ordinal}\footnote{These are technical terms of voting theory. You can safely ignore them if you don't know what they mean.} voting system, many of the mathematical results about unfairness and dictatorship, such as [], do not apply.
 	
-	I am giving for granted that you know how range voting works. If you don't, read about it on the other PDF or on Wikipedia. As an alternative, just fuck yourself.
+	In range voting, each voter can rank each choice giving a score, for instance from $0$ to $10$, where $0$ stands for ``I absolutely don't like this choice'' and $10$ stands for ``I absolutely love it'' (see for instance Figure~[]). When the voting closes, the scores for each choice are summed, and the choice with more points is the one that wins.
 	
-	\begin{definition}\label{voting string}
-		Suppose we have a set $\mathcal{N}$ of candidates. Suppose moreover we have a set $\mathfrak{M}$ of possible voting values. For instance, if we have three people proposing (call them $A, B, C$) and the user can rate every one of these people from $-3$ to $-3$, then $\mathcal{N} := \{A, B, C\}$ and $\mathfrak{M} := \{-3,-2,-1,0,1,2,3\}$, hence $|\mathcal{N}| = 3$ and $|\mathfrak{M}|=7$.
+	There are many groups that actively advocate for range voting to be adopted in electoral laws all around the world, and in addition to this range voting is also considerd one of the best voting procedure available in company administration (see, for instance [][]). 
+	
+	To conclude, in choosing the right voting procedure for the Swarm platform we consulted decades of research and study on voting systems to find the best alternative available, and we are fairly convinced that range voting is the one.
+	
+	\subsection{Reputation}
+	Taking into account ``modifiers of the voting power'' is also very easy when one adopts range voting. Let's suppose, for instance, that we want to have a system where the power of a voter is proportional to the number of coins he owns. If voter $A$ owns $n$ coins, then it will be sufficient to multiply by $n$ all the scores that $A$ gives to each candidate. So, for instance, if $A$ owns $10$ coins and ranks a candidate with a score of $5$, that candidate will receive $10*5=50$ points.
+	
+	To be precise, we want to take into account more parameters than just the quantity of money a voter has to determine the voting power, but now we do not need any new concept to do this. For each user $A$, we will just calculate a multiplier, denoted with $\rho_A$ and called \emph{reputation of $A$}, considering all the parameters that we deem relevant. Again, everything we will need to do to make $A$'s votes proportional to his reputation is to multiply all the scores that $A$ assigns by $\rho_A$.
+
+	\subsection{Drafts}
+	Clearly, it may happen that a vote leads to a draft. In range voting this means that there are two or more candidates at the top of the points list having the same score. For instance, imagine we have to elect three people for a company board and there are ten candidates, with their ranking in terms of points as follows:
+	\begin{center}
+	\begin{tabular}{| l | r |}
+		\hline
+		\textbf{Candidate} & \textbf{Points}\\
+		\hline			
+		Candidate 7 & 247\\
+		Candidate 2 & 133\\
+		Candidate 5 & 102\\
+		Candidate 8 & 102\\
+		Candidate 10 & 84\\
+		Candidate 1 & 58\\
+		Candidate 6 & 37\\
+		Candidate 3 & 29\\
+		Candidate 9 & 14\\
+		Candidate 4 & 3\\
+		\hline  
+	\end{tabular}
+	\end{center}
+	Since we are selecting only three members for the board, we have to pick the three best performing candidates. This obviously includes candidates $7$ and $2$, but then we are stucked because candidate $5$ and $8$ have the same amount of points. So who who among the two do we choose?
+	
+	In classic range voting, at this point, another voting round is held. We discussed at length about implementing such a system for Swarm, and we decided that it wasn't a good idea, first because it puts much more stress and responsibility on users that will have to vote two times, and second because it would make the actual code much more complicated and difficult to audit. So we went for a system in which no second round is needed, as follows:
+	\begin{itemize}
+		\item If there is an ex-aequo situation, we will prefer the candidate with the highest reputation.
+		\item If this doesn't solve the problem (there are multiple winning candidates with the same reputation), then the choice is pseudorandom.
+	\end{itemize}
+
+\section{The voting algorithm -- Intuitive explanation}
+
+\subsubsection{Desiderata}
+	Now that we know what we want, we have to implement it. There are some fundamental desiderata we require:
+	\begin{itemize}
+		\item The voting should be transparent. This means that all the relevant information should be stored on the blockchain, and every user should be able to calculate the vote outcome independently, as well as to check that is preference was correctly submitted.
 		
-		We can express the voting of a user as a string $(a,b,c)$, where $a,b,c \in \mathfrak{M}$. $a$ represents the rating given to candidate $A$, $b$ the rating given to candidate $B$ and $c$ the rating given to candidate $C$. This string is called \emph{voting string}.
+		\item The voting should be encrypted. As we said in Section~\ref{sec:Pre-existent solutions}, one problem of voting on the blockchain is that people can know who is winning before the voting window closes. To avoid such a situation, every vote should be encrypted and readable only when the voting window closes.
+		
+		\item Being an active member of the Swarm democracy should increase a member reputation. Swarm values participation, and it makes sense that ``the more you vote, the more your vote becomes powerful''. This is also a way to value the experience and time spent on the platform.
+		
+		\item The reputation should also be proportional to the amount of Swarm tokens owned. More specifically, if one owns zero Swarm tokens then his voting power should be zero (meaning that has no influence whatsoever).
+		
+		\item Delegation must be possible. The word ``delegation'' is actually the reason why we talk about \emph{liquid democracy} and not just about \emph{deocracy}. The idea here is that any Swarm member can delegate some other member to vote in his place. This is particularly useful when someone is asked to take a decision, but does not feel to have enough experience or understanding to vote. Instead of wasting his preference, in such situation a user can delegate someone else to vote in his place.
+		Imagine, for instance, that Bob is a Swarm user. Bob has to vote to elect members of the administration Board. He reads all the proposals and what every member wants to do, but it is all incredibly technical and out of his skill set. Bob, on the other hand, knows that Alice, a professional trader which he trusts, is on Swarm too. What Bob can do is delegating Alice to vote for him, so that his preference will not be wasted.		
+	\end{itemize}
+
+\subsubsection{User experience}
+	From the point of view of a Swarm user, voting should be simple. The idea is that you just visit a webpage, and use the ethereum address you have your tokens on as a login. At this point, you are able to see your reputation and all the open voting windows. To vote, it is sufficient to rank each candidate on the webpage and sign your preference with your private key. At this point, the preference is submitted. To improve easy of use, we are working to make such webpage compatible with Nano Ledger S and Trezor, so that signing your petition will just require a couple of clicks.
+	
+	When the voting window closes and the outcome is calculated, the user should will be able to see it on the very same web page.
+	
+\subsection{The Voting Algorithm}	
+
+
+
+
+
+
+
+
+
+
+\section{The Algorithm, detailed explanation}
+	This section is technical and requires some basic familiarity with mathematics and coding. 
+
+	\begin{definition}
+		A \emph{string} $s$ is a finite sequence of characters or digits $s_1 s_2 \cdots s_n$. If $s$ is a string, we will denote with $s[n]$ the \emph{n-th} character of $s$, and with $|s|$ the \emph{length} of $s$. We will abuse this notation and we will often use \emph{strings of strings}, that is, some string $s$ such that $s[n]$, for some $n$, is a string too. In this case, we will denote with $s[n][m]$ the $m$-th entry of the $n$-th entry of $s$.
+	\end{definition}	
+	
+	\begin{definition}
+		We will denote with \candidates the \emph{ordered} set of candidates or choices that can be voted for in a given vote. We will denote with \range the set of possible scores a user can assign to each candidate. For instance, if we have three possible choices $A,B,C$ and the range of possible scores goes from $-3$ to $3$, then $\candidates := \{A, B, C\}$ and $\range := \{-3,-2,-1,0,1,2,3\}$. We will moreover denote with $| \candidates|$ and $|\range|$ the number of elements that these two sets have. In our example, $|\candidates | = 3$ and $|\range|=7$.
+	\end{definition}
+	
+	\begin{definition}\label{voting string}		
+		We can express the voting of a user as a string $(a,b,c, \dots)$, where $a,b,c \in \range$. $a$ represents the rating given to candidate $A$, $b$ the rating given to candidate $B$ and $c$ the rating given to candidate $C$ and so on. This string is called \emph{voting string}, and its length is clearly equal to $|\candidates|$.
 	\end{definition}
 	\begin{definition}
  		We denote an user $A$ delegating his/her vote to a user $B$ with $A \to B$.
@@ -158,6 +262,10 @@ Jelle Herold
 					\end{itemize}
 				\end{itemize}
 			\end{itemize}
+
+\section{The code}
+	The source code of the algorithm, when completed, will be appended to this section. It will only contain the core functions dealing with smart contracts. If you want a more detailed coverage, comprising the front end part too, please refer to our github repo [].
+
 
 	\subsection{Analysis}
 		With this algorithm we solve a shitload or problems. No one is able to see who voted for who and what is the delegation structure until the vote ends. The fact that the public key is obtained from two different secret keys means that not even the guardians are able to do this alone. The guardians should agree to fuck the platform sharing their secret keys and accessing the votes outcome while the voting window is still open. This is obviously possible and this is why the guardians should be two trusted and independent entities.
