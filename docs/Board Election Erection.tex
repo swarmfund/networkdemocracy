@@ -1,5 +1,5 @@
 \documentclass[submission, copyright,creativecommons,sharealike,noncommercial]{eptcs}
-\providecommand{\event}{Swarm group}
+\providecommand{\event}{Swarm community}
 
 \newcommand{\yourpath}{Preambles/}
 \usepackage{import}
@@ -12,6 +12,10 @@
 
 \newcommand{\candidates}{\ensuremath{\mathcal{C}} \xspace} 
 \newcommand{\range}{\ensuremath{\mathfrak{R}}\xspace}
+
+\newcommand{\Candidates}{\textbf{CANDIDATES}\xspace} 
+\newcommand{\Vote}{\textbf{VOTE}\xspace}
+\newcommand{\Reputation}{\textbf{REPUTATION}\xspace} 
 
 \title{Liquid Democracy Voting System for the Swarm Platform}
 \author{Fabrizio Romano Genovese
@@ -61,7 +65,7 @@ Jelle Herold
 	\end{enumerate}
 	For these reasons we deemed necessary to steer away from all the pre-existing solutions and design an ad-hoc voting environment that is reasonably fair (according to social choice theory) and suitable to be used on a daily basis.
 
-\section{Range Voting}
+\section{Range Voting}\label{sec:Range voting}
 
 	\begin{wrapfigure}{r}{0.5\textwidth}
 		\vspace{-10pt}
@@ -135,20 +139,81 @@ Jelle Herold
 	From the point of view of a Swarm user, voting should be simple. The idea is that you just visit a webpage, and use the ethereum address you have your tokens on as a login. At this point, you are able to see your reputation and all the open voting windows. To vote, it is sufficient to rank each candidate on the webpage and sign your preference with your private key. At this point, the preference is submitted. To improve easy of use, we are working to make such webpage compatible with Nano Ledger S and Trezor, so that signing your petition will just require a couple of clicks.
 	
 	When the voting window closes and the outcome is calculated, the user should will be able to see it on the very same web page.
+
+\subsubsection{Voting phases}
+	There are two different kinds of votes on Swarm. The first kind is when the user base has to express a preference. The board may ask, for instance, ``Do you prefer option A or option B?'' and in this case everything that is needed is voting. 
 	
+	The second kind is when the vote is about electing people to occupy a position, for instance when the user base has to elect members for the Swarm board. In this case, we have to implement a ``campaign phase'' before the vote itself, where people are actually able to propose themselves for the position.
+	
+	What we want then is as follows:
+	\begin{itemize}
+		\item A phase I (optional, depending on the kind of vote) to manage candidatures.
+		\item A phase II that is the vote itself.
+	\end{itemize}
+
 \subsection{The Voting Algorithm}	
+\subsubsection{Phase I}
+	During phase I (if the kind of vote comprises it), users will have a time window to propose themselves for the election. This is what happens:
+	\begin{itemize}
+		\item Phase I time window opens. A smart contract called \Candidates is created. It will contain information about all the candidates running for the election.
 
+		\item Any user, logging in with his ethereum address, can see this on the webpage. He can, if he wishes to, decide to run for the election. To do this the user has to fill a couple of fields: One is a ``bio'' field where the user says something about himself. The other is a ``letter of intent'' where the user states why he wants to run for the election. The candidature can be submitted signing it with the user private key.
+		
+		\item Every time a candidature is submitted, the \Candidates contract checks that no other candidature has been already submitted by that ethereum address. This is because, obviously, one user can run only once for the same vote, and also to prevent spamming. If this is the case, the candidate is not added to \Candidates and the submission is rejected with an error message. Otherwise, it is.
+		
+		\item When the Phase I time window closes, it is not possible to add further candidates to \Candidates.
+	\end{itemize}
+	
+\subsection{Phase II}
+	During Phase II the actual voting happens, as follows:
+	\begin{itemize}
+		\item Phase II voting window opens. A smart contract called \Vote is created. It will contain information about all the candidates running for the election.
+		
+		\item A Swarm trusted party\footnote{The Estonian non-profit, for instance} creates a couple of public/private keys. The private key is kept secret, while the public key is pushed into the \Vote contract.
+		
+		\item Every user can see the open vote on the web page, with all the set of choices/candidates to rate. If Phase I was present, the set of candidates is automatically derived from the \Candidates smart contract. 
+		
+		\item The user can vote as follows: He can rank each candidate giving him a score (from $-3$ to $3$, the default being $0$). He can moreover specify an ethereum address to delegate his vote to someone else. 
+		
+		Note that these two things are not mutually excluding: If for some reason the delegation shouldn't work (for instance if your delegate forgets to vote), then the algorithm will immediately fall back on the scores the user gave. It makes sense then that you express a vote even when you specify a delegate to vote for you.
+		
+		\item When the user pushes the ``submit'' button, all his voting preferences and delegate addresses are encrypted using the public key found in \Vote. The user is then prompted to sign his submission with his private key, as usual.
+		
+		\item When the Phase II voting window closes, it is not possible to push more voting preferences to \Vote.
+	\end{itemize}
 
-
-
-
-
-
-
+\subsubsection{Outcome}
+		The outcome of the vote is then calculated, as follows:
+		\begin{itemize}	
+			\item Shortly after the Phase voting window closes, the Swarm trusted party appends the secret key that was generated in the previous phase to \Vote. At this point, all the information contained in \Vote becomes accessible to everyone.
+			
+			\item \Vote is decripted, and the outcome is calculated offline. This is still trustable since every user can repeat this procedure on his own computer (this functionality will be provided on the web page, and every user will be able to check that the outcome was calculated correctly with client-side).
+			
+			\item First of all, the algorithm check for repeated votes, that is, users that submitted their vote more than once. This being the case, the algorithm just cancels all the submitted votes but the most recent one.
+			
+			\item After this, the algorithm checks that no vote comes from the Swarm foundation address, and this being the case, cancels that voting preference from the contract. This is for ethical reasons. In fact, Swarm founders could use the Swarm foundation to express a vote. Since the Swarm foundation holds 33\% of the total Swarm tokens, its would be so high to turn Swarm into a dictatorship. Swarm team members and partners are obviously still able to vote using their personal wallets, as any other member.
+			
+			\item The algorithm pushes information into the \Reputation contract, that registers how many times a user expressed a vote. This paramenter is used to calculate the reputation of a user, since it representative of the user activity and contribution to the platform
+			
+			\item The algorithm solves delegation errors. In fact, it may be that a user called Bob delegated Alice to vote for him, but Alice forgot to vote. It could also be that Bob delegated Alice, Alice delegated Charlie and Charlie delegated Bob. As you can see, this is a loop and it is difficult to say who is deciding for who. The algorithm addresses this situation falling back to the personal preferences. For instance, if Bob delegated Alice and Alice forgot to vote, then the algorithm uses the scores that Bob gave. In the worst case, Bob left everything as it was, meaning that he had scored $0$ every candidate.
+			
+			\item The algorithm calculates the reputation of every voter. To do this, it checks how many tokens the voter holds, checks if there are more reputation modifiers referring to that user in the \Reputation contract, and puts everything together. At this point two things can happen:
+			\begin{itemize}
+				\item If the user voted for himself, the algorithm multiplies the scores that the user gave by his reputation.
+				
+				\item If the user delegated someone else, the algorithm transfers the user reputation to that someone to calculate the scores.
+			\end{itemize}
+		
+			\item Finally, the algorithm calculates the winning choice/candidate summing all the scores together. As we pointed out in Section~\ref{sec:Range voting}, if there are ex-aequo candidates then the algorithm checks who has the bigger reputation to calculate the winner\footnote{Note that if the voting is about choices and not candidates, this is not possible since choices do not correspond to single users and hence have no reputation. In this case this step is just skipped}. If this is not enough, the algorithm chooses between the winning alternatives pseudorandomly.
+			
+			Should be this the case, the user will receive a notification warning him: Since the final choice is pseudorandom, clearly the outcome calculated in locale may be different from the outcome calculated by Swarm team.
+			
+			\item The Swarm team publishes the result of the vote, that is displayed in the user web page. As we said, the user can independently check that the outcome has been calculated correctly.
+		\end{itemize}
 
 
 \section{The Algorithm, detailed explanation}
-	This section is technical and requires some basic familiarity with mathematics and coding. 
+	\textbf{Note:} This section is technical and requires some basic familiarity with mathematics and coding. 
 
 	\begin{definition}
 		A \emph{string} $s$ is a finite sequence of characters or digits $s_1 s_2 \cdots s_n$. If $s$ is a string, we will denote with $s[n]$ the \emph{n-th} character of $s$, and with $|s|$ the \emph{length} of $s$. We will abuse this notation and we will often use \emph{strings of strings}, that is, some string $s$ such that $s[n]$, for some $n$, is a string too. In this case, we will denote with $s[n][m]$ the $m$-th entry of the $n$-th entry of $s$.
