@@ -57,6 +57,22 @@ name=Definition
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\bibliographystyle{eptcs}
+\PassOptionsToPackage{%
+	backend=biber, %instead of bibtex
+	natbib=true,% natbib compatibility mode (\citep and \citet still work)
+	bibencoding=utf8,%
+	language=auto,%
+	style=numeric-comp,%
+	sorting=nyt,% name, year, title
+	backref=true,%"Cited on page..."
+	firstinits=true%Only name initials
+	%url=true
+	%style=authoryear-comp, % Author 1999, 2010
+	%bibstyle=authoryear,dashed=false, % dashed: substitute rep. author with ---
+}{biblatex}
+\usepackage{biblatex}
+\addbibresource{Democracy.bib}
 %
 %
 \begin{document}
@@ -76,7 +92,7 @@ name=Definition
 	
 	Albeit very simple to implement, this method has many fundamental flaws that make it not suitable for a system that has democracy -- and hence voting -- at its center:
 	\begin{enumerate}	
-		\item First of all, a voting procedure like the one highlighted above is very similar to majority voting and, as such, it is cursed by many downsides. One of the biggest achievement of social choice theory is proving that many of the voting systems that people intuitively consider ``fair'' are not fair at all, meaning that they are prone to any sort of manipulation [] or can even be dictatorial []. Voting with tokens as stated above is no exception. 
+		\item First of all, a voting procedure like the one highlighted above is very similar to majority voting and, as such, it is cursed by many downsides. One of the biggest achievement of social choice theory is proving that nearly all the voting systems that people intuitively consider ``fair'' are not fair at all, meaning that they are prone to any sort of manipulation or can even be dictatorial~\cite{Arrow1951, Satterthwaite1975, Gibbard1973}. Voting with tokens as stated above is no exception. 
 		%
 		\item In the very same moment someone votes, the tokens are transferred to the address expressing a preference, and can be publicly seen. This means that a sufficiently skilled user is able to see in real time who is winning the vote. This exposes the system because gives away data that can be employed for any kind of manipulation.
 		%
@@ -101,15 +117,15 @@ name=Definition
 			\includegraphics[width=0.48\textwidth]{Voting_Ballot.png}
 		\end{center}
 		\vspace{-15pt}
-		\caption{Range voting ballot [source: Wikipedia]}
+		\caption{Range voting ballot [source: Wikipedia]}\label{fig:Ballot}
 		\vspace{-5pt}
 	\end{wrapfigure}
 %
-	The voting method we choose for the platform is \emph{range voting}. Range voting is one of the fairest voting systems available. In particular, being it a \emph{cardinal} and not an \emph{ordinal}\footnote{These are technical terms of voting theory. You can safely ignore them if you don't know what they mean.} voting system, many of the mathematical results about unfairness and dictatorship, such as [], do not apply.
+	The voting method we choose for the platform is \emph{range voting}. Range voting is one of the fairest voting systems available. In particular, being it a \emph{cardinal} and not an \emph{ordinal}\footnote{These are technical terms of voting theory. You can safely ignore them if you don't know what they mean.} voting system, many of the mathematical results about unfairness and dictatorship, such as~\cite{Arrow1951, Satterthwaite1975}, do not apply.
 	
-	In range voting, each voter can rank each choice giving a score, for instance from $0$ to $10$, where $0$ stands for ``I absolutely don't like this choice'' and $10$ stands for ``I absolutely love it'' (see for instance Figure~[]). When the voting closes, the scores for each choice are summed, and the choice with more points is the one that wins.
+	In range voting, each voter can rank each choice giving a score, for instance from $0$ to $9$, where $0$ stands for ``I absolutely don't like this choice'' and $9$ stands for ``I absolutely love it'' (see for instance Figure\ref{fig:Ballot}). When the voting closes, the scores for each choice are summed, and the choice with more points is the one that wins.
 	
-	There are many groups that actively advocate for range voting to be adopted in electoral laws all around the world, and in addition to this range voting is also considerd one of the best voting procedure available in company administration (see, for instance [][]). 
+	There are many groups that actively advocate for range voting to be adopted in electoral laws all around the world, and in addition to this range voting is also considerd one of the best voting procedure available in company administration (see, for instance~\cite{Electology, RangeVoting}). 
 	
 	To conclude, in choosing the right voting procedure for the Swarm platform we consulted decades of research and study on voting systems to find the best alternative available, and we are fairly convinced that range voting is the one.
 %
@@ -258,7 +274,7 @@ name=Definition
 %
 \section{The Algorithm, detailed explanation}\label{sec:Algorithm technical explanation}
 %
-	\textbf{Note:} This section is technical and requires some basic familiarity with mathematics and coding. 
+	\textbf{Note:} This section is technical and requires some basic familiarity with mathematics and coding. The following algorithms are not even written as pseudocode, and use evil instructions like ``goto''. This choice has been made to improve readability and give an idea of what are the actions that the algorithm has to perform. The real modules used will be most likely coded using functional programming. Please refer to our github repo to check the actual source code.
 %
 %
 \subsection{Definitions}\label{subsec:Definitions}
@@ -335,11 +351,11 @@ Here we highlight the fundamental pieces of information that will be specified i
 	\begin{description}
 		\item[Secret key:] This is specified in the contract when it is created. It is a RSA (or similar) secret key, denoted with \emph{pub} and generated by a Swarm trusted party.
 			
-		\item[Instructions:] These are again specified when the contract is created, and are used to calculate the voting outcome (for instance, ``the three best candidates have to be picked''.) It moreover specifies the range of possible values used for range voting, denoted with $\range$.
+		\item[Instructions:] These are again specified when the contract is created, and are used to calculate the voting outcome. They consist of two parameters: an integer, representing the number of choices that have to be declared as winners (for instance, ``the three best candidates have to be picked''), and the range of possible values used for range voting, denoted with $\range$ (for instance $\{-3,-2,-1,0,1,2,3\}$\footnote{By definition, we require $0$ to be always present in the range, and the range to be symmetric, meaning that the values can go from $-x$ to $x$, for some integer $x$.}).
 		%
 		\item[Encrypted block:] This is a list of encrypted strings, that look like this when decrypted:
 		\[
-		v := (\text{user address}, \text{preference string}, \text{delegation address})
+		v := (\text{user address} \mid \text{preference string} \mid \text{delegation address})
 		\]
 		Such strings are called \emph{voting strings}, and have following specification:
 		\begin{description}
@@ -359,7 +375,10 @@ Here we highlight the fundamental pieces of information that will be specified i
 		
 		\item[Plain block:] This is just the encrypted block itself, decrypted with \emph{sec} and purged of incorrect specifications and delegation loops, according to module~\ref{subsubsec:Get plain block}. It will be added to the contract by a Swarm tusted party after the voting window closes.
 			
-		\item[Winner:] The list of winner(s) of the election, again added to the contract by a Swarm trusted party when the voting window closes. 
+		\item[Winner:] The list of winner(s) of the election, again added to the contract by a Swarm trusted party when the voting window closes. This is just a list of numbers bigger or equal to $1$, referencing to the \Candidates or \Choices contract. If this list is, for instance, $(3,6,2)$, this means that the 3\textsuperscript{rd}, the 6\textsuperscript{th} and the 2\textsuperscript{nd} candidate (choice) listed on \Candidates (\Choices) are the ones who won. 
+		
+		To get the corresponding winning candidate (choice) value it is sufficient to fetch the first value of the string in the contract. For instance, in the previous example, if our contract is of type \Candidates then the winning ethereum addresses are ``3\textsuperscript{rd} listed string''[1], ``6\textsuperscript{th} listed string''[1] and ``2\textsuperscript{nd} listed string''[1].
+
 	\end{description}
 	This contract is very simple. It is just a big database, with an encrypted and a plain text part. The only real computation that the database does is checking if the user can or cannot add a voting string to it verifying if the voting window is open or not and, in a latter stage, authorizing only the Swarm trusted party to add information to it.
 
@@ -367,11 +386,11 @@ Here we highlight the fundamental pieces of information that will be specified i
 		
 	\textbf{Note}: The reason why the plain block is added to the contract is to make the outcome verification process faster. On the user web page, in fact, the user will have the possibility to check independently the outcome of a vote. To do this, some code will be run client-side. The user will be able to select between three modes:
 	\begin{itemize}
-		\item A ``thorough'' mode that obtains the plain block applying module~\ref{subsubsec:Get plain block}, verifies that this coincides with the plain block added to \Vote by the Swarm trusted party and then calculates the vote outcome, that is again compared with the list of winners attached to \Vote. With this option nearly every step of the calculation is executed locally.
+		\item A ``thorough'' mode that obtains the plain block applying module~\ref{subsubsec:Get decrypted block}, verifies that this coincides with the plain block added to \Vote by the Swarm trusted party and then calculates the vote outcome, that is again compared with the list of winners attached to \Vote. With this option nearly every step of the calculation is executed locally.
 		
 		\item A ``fast'' option that skips the first part, and just uses the plain block provided on the \Vote contract to calculate the outcome. This will undoubtably be faster, since all the decryption and purging will be skipped.
 		
-		\item A ``paranoid'' option that works as the ``thorough'', with the exception that now module~\ref{subsubsec:Get reputation for every user} does not use the plain block of previous contracts to calculate reputations, but invokes the~\ref{subsubsec:Get plain block} every time. This will require \textbf{a lot} of decryption and purging, and will probably be very very slow to run. On the other hand, here \textbf{every} step of the calculation is executed locally, and nothing is given for granted.
+		\item A ``paranoid'' option that works as the ``thorough'', with the exception that now module~\ref{subsubsec:Get reputation for every user} does not use the plain block of previous contracts to calculate reputations, but invokes module~\ref{subsubsec:Get decrypted block} every time. This will require \textbf{a lot} of decryption and purging, and will probably be very very slow to run. On the other hand, here \textbf{every} step of the calculation is executed locally, and nothing is given for granted.
 	\end{itemize} 
 %
 %
@@ -386,22 +405,10 @@ Here we highlight the fundamental pieces of information that will be specified i
 		
 		\item The \History contract is also used by the user web page to fetch the history of all the votes performed by the platform. Following the references any client can display which votes have been performed and for which ones Phase I and Phase II time windows are still open.
 	\end{itemize}
-% He just has to scroll the \History contract and follow the reference, checking how many times an address is listed in those. Here follows a brief description of how this is going to work:
-%	\begin{itemize}
-%		\item Fix a given ethereum addres $h$ and initialize two integer variables \emph{votes} and \emph{candidatures} to $0$.
-%		%
-%		\item Scroll the \History contract. Follow the first reference:
-%		\begin{itemize}
-%			\item If this is a \Choices contract, follow the reference to the correspondent \Vote contract. If, for some  $v_{\emph{dec}}$,  $v_{\emph{dec}}[1] = h$, then $\emph{votes} = \emph{votes} + 1$.
-%			%
-%			\item If this is a \Candidates contract, check if there is some string $c$ such that $c[1] = h$. If yes, then $\emph{candidatures} = \emph{candidatures} + 1$. Then, follow the reference to the correspondent \Vote contract. If, for some  $v_{\emph{dec}}$,  $v_{\emph{dec}}[1] = h$, then again $\emph{votes} = \emph{votes} + 1$.
-%		\end{itemize}
-%	\end{itemize}
-%%
-%	At the end of this process, \emph{votes} and \emph{candidatures} will represent how many times the address $h$ was used to vote or to run as a candidate, respectively.
+%
 %	
-	
 \subsection{Modules}\label{subsec:Modules}
+%	
 	Here we formalize some algorithms that will perform various operations to get a vote outcome, such as getting rid of delegation loops. These algorithms will be invoked to perform the voting, both locally and by the Swarm trusted party.
 	
 \subsubsection{Display votes}\label{subsubsec:Display votes}
@@ -429,8 +436,14 @@ Here we highlight the fundamental pieces of information that will be specified i
 
 \subsubsection{Submit vote}\label{subsubsec:submit vote}
 	This is the algorithm to submit a vote.
-
-	
+	\begin{itemize}
+		\item Check if the time window allows you to submit your vote to \Vote. If not, return with an error.
+		\item Form the string $v:= (\text{your ethwallet} | \text{preference string} \mid \text{delegation address})$
+		\item Fetch the public key \emph{pub} from $\Vote$. 
+		\item Encrypt $v$ with $\emph{pub}$.
+		\item Add it to \Vote signing with your private key.	
+	\end{itemize}
+		
 \subsubsection{Get decrypted block}\label{subsubsec:Get decrypted block}
 	This is the algorithm to decrypt the encrypted block in a \Vote contract and purge it by any kind of error.
 	\begin{itemize}
@@ -445,33 +458,32 @@ Here we highlight the fundamental pieces of information that will be specified i
 
 
 \subsubsection{Check vote outcome}\label{subsubsec:Calculate vote outcome}
-This module verifies that the outcome of a vote is the one provided by the Swarm trusted party.
+This module verifies that the outcome of a vote is the one provided by the Swarm trusted party. 
+
+First of all, fetch the number of winner(s) from the instructions of the $\Vote$ contract. Fetch the number of candidates (choices) from the \Candidates (\Choices) contract, call it $|\candidates|$. If $|\candidates| \leq w$, declare everyone a winner. Otherwise: 
 	\begin{description}
 		\item[Fast mode:] This is the fastest mode available. 
 			\begin{itemize}
 				\item Read the plain block from \Vote. Copy it to a local file \Vote'.
 				\item Assign reputation to every user (module~\ref{subsubsec:Assign reputation to every user}, \textbf{fast} option enabled).
-				\item Sum the scores. This is just a componentwise sum.
-				\item Check that the outcome coincides with the winner(s) displayed in \Vote.
+				\item Calculate the winner(s) (module~\ref{subsubsec:Get winner}).
 			\end{itemize}	
 		\item[Thorough mode:] This mode will be slower, but the only thing that won't be entirely checked are user reputations.
 			\begin{itemize}
 				\item Apply module~\ref{subsubsec:Get decrypted block} to \Vote.
 				\item Read the plain block from \Vote. Check that the two coincide. If not, display an error.
 				\item Assign reputation to every user (module~\ref{subsubsec:Assign reputation to every user}, \textbf{fast} option enabled).
-				\item Sum the scores. This is just a componentwise sum.
-				\item Check that the outcome coincides with the winner(s) displayed in \Vote.
+				\item Calculate the winner(s) (module~\ref{subsubsec:Get winner}).
 			\end{itemize}			
 		\item[Paranoid mode:] This mode will be painfully slow, but will check everything locally.
 			\begin{itemize}
 				\item Apply module~\ref{subsubsec:Get decrypted block} to \Vote.
 				\item Read the plain block from \Vote. Check that the two coincide. If not, display an error.
 				\item Assign reputation to every user (module~\ref{subsubsec:Assign reputation to every user}, \textbf{slow} option enabled. This will take time).
-				\item Sum the scores. This is just a componentwise sum.
-				\item Check that the outcome coincides with the winner(s) displayed in \Vote.
+				\item Calculate the winner(s) (module~\ref{subsubsec:Get winner}).
 			\end{itemize}			
 	\end{description}
-
+Finally, check that the output result coincides with the one in $\Vote$ (module~\ref{subsubsec:Final check}).
 
 \subsubsection{Decrypt block}\label{subsubsec:Decrypt block}
 This module just uses the the secret key \emph{sec} in \Vote to decrypt the encrypted block.
@@ -494,7 +506,7 @@ This module just uses the the secret key \emph{sec} in \Vote to decrypt the encr
 		
 		\item Next, check that $\Vote[n]$ was pushed to \Vote by $\Vote'[n][1]$. This not being the case, it means that some ethereum address added a vote to $\Vote$ using a false identity. This being the case, erase the line $\Vote'[n]$. 
 		
-		\item Then, check how many candidates (choices) are in \Candidates (\Choices). This will be equal to the number of candidate strings present there. To keep consistent with our notation, denote this number will be equal to $|\candidates|$. Check that, for every $n$, $\Vote[n][2]$ is a string of integers of lenght $|\candidates|$, with values ranging in $\range$. If this is not the case, again delete $\Vote[n][2]$
+		\item Then, check how many candidates (choices) are in \Candidates (\Choices). This will be equal to the number of candidate (choice) strings present there. To keep consistent with our notation, denote this number with $|\candidates|$. Fetch moreover the range parameter $\range$ from \Vote. Check that, for every $n$, $\Vote[n][2]$ is a string of integers of length $|\candidates|$ with values ranging in $\range$. If this is not the case, again delete $\Vote[n][2]$.
 		
 		\item Finally, for every $n$, check that $\Vote'[n][3]$ is a valid ethereum address, or $0$. Again, if this is not the case, delete $\Vote[n][2]$.
 		
@@ -650,26 +662,64 @@ This module just uses the the secret key \emph{sec} in \Vote to decrypt the encr
 		\begin{description}
 			\item[--] Set $\eta_{tot} = \eta_{tot}+1$.
 	
-			\item[Fast mode] For each of such contracts, fetch the plain block and check if there is any string $n$ such that $n[1]=h$. If yes, set $\eta_{h} = \eta_{h}+1$.
+			\item[Fast mode] For each of such contracts, fetch the plain block and check if there is any voting string $n$ such that $n[1]=h$. If yes, set $\eta_{h} = \eta_{h}+1$.
 			
-			\item[Slow mode] For each of such contracts, decrypt the encrypted block using module~\ref{subsubsec:Decrypt block}. Then check if there is any string $n$ in it such that $n[1]=h$. If yes, set $\eta_{h} = \eta_{h}+1$.
+			\item[Slow mode] For each of such contracts, decrypt the encrypted block using module~\ref{subsubsec:Decrypt block}. Then check if there is any voting string $n$ such that $n[1]=h$. If yes, set $\eta_{h} = \eta_{h}+1$.
 			
 			\textbf{Note:} As time progressess, the Slow mode will become increasingly slow, since the quantity of votes to decrypt will grow at least linearly.
 		\end{description}
 
-
 		\item Now, corresponding to $h$, we have three parameters: $\sigma_h$, the amount of tokens held. $\eta_h$, the number of votes to which $h$ took part in, and $\gamma_h$, the number of times $h$ run for an election. The reputation is calculated as:
 		\[
-		\rho_h = \sigma_h\left( k \frac{\eta_h}{\eta_{tot}} + k' \frac{\gamma_h}{\gamma_{tot}} + 1\right)
+		\rho_h = \Big\lfloor \sigma_h\left( k \frac{\eta_h}{\eta_{tot}} + k' \frac{\gamma_h}{\gamma_{tot}} + 1\right) \Big\rfloor
 		\]
-		$k$ and $k'$ are two parameters, that at the moment are set as $k=0.5, k'=0.1$. The reason why $k'$ is counterintuitively less rewarding than $k$ is to prevent flooding: People may try to propose to every election en masse in the hope to boost their voting power on the platform. 
+		$k$ and $k'$ are two parameters, that at the moment are set as $k=0.5, k'=0.1$, and $\lfloor \rfloor$ is the floor function. The reason why $k'$ is counterintuitively less rewarding than $k$ is to prevent flooding: People may try to propose to every election en masse in the hope to boost their voting power on the platform. 
 		
 		Note that with this formula, a user not holding any tokens has reputation equal to zero, meaning that he has no say whatsoever in Swarm governance. Also, supposing that someone runs for every election and votes at every vote, he can boost his reputation by a maximum of 1.6 with respect to the amount of tokens held.
 	\end{itemize}
 
+\subsubsection{Calculate the winner(s)}\label{subsubsec:Get winner}
+	This algorithm sums all the scores in a list of strings \Vote' and picks the best ones as prescribed by the instructions on the \Vote contract. It returns two arrays of numbers: The first represents the sure winner(s), the second represent the remaining winner in case pseudorandom selection is needed.
+	
+	\begin{enumerate}
+		\item Denote with $N$ the length of \Vote'. Calculate $S := \sum_{n=1}^N \Vote'[n][2]$, where with $\sum$ we are denoting the component-wise sum of strings of numbers.
+		
+		\item Initialize two empty strings, call them $K$ and $P$. They represent the set of winner(s) and the set of possible winner(s) that will have to be pseudorandomly chosen, respectively. Note that $P$ may be empty.
+		
+		\item Fetch from the \Vote contract instructions the number of winning candidates (choices) we have to pick. Suppose this number is $w$.
+		
+		\item Find all the $n$ not in $K$ such that, for any $n'$ not in $K$, $S[n] \geq S[n']$. Add these integers to $P$.
+		
+		\item Proceed by cases:
+		\begin{itemize}
+			\item If $|K|+|P| = w$, then append all the entries of $P$ to $K$, set $P$ to the empty string and go to step $6$.
+			\item If $|K|+|P| < w$, then append all the entries of $P$ to $K$, set $P$ to the empty string and go to step $4$. 
+			\item If $|K|+|P| > w$, then we have too many elements in $P$. If the vote comes from an election, we can further select these elements in $P$ until we hit the number $w$. If not, then we need to select alternatives in $P$ pseudorandomly. Proceed by cases: If \Vote is referenced in a \Choices contract, go to step $6$. If \Vote is referenced in a \Candidates contract, then:
+			\begin{enumerate}
+				\item Form a string of the same length of $P$ and initialize it to $0$, call it $R$. For every $p$, fetch $P[p][1]$  in the \Candidates contract and calculate the reputation $\rho_{P[p][1]}$.\footnote{This is again done invoking module~\ref{subsubsec:Get reputation for every user}. Again, fast or slow mode will have to be selected according to the type of check we are performing.} Set $R[p] := \rho_{P[p][1]}$.
+				\item Initialize an empty string $P'$.
+				\item Find all the $p$ such that, for any $p'$, $R[p] \geq R[p']$. Add these numbers to $P'$.
+				\begin{itemize}
+					\item If $|K| + |P'| = w$, then for each $p$ in $P'$ append $P[p]$ to $|K|$, set $P$ to the empty string and go to step $6$.
+					\item If $|K| + |P'| < w$, then for each $p$ in $P'$ append $P[p]$ to $|K|$, purge the $p$-th entry from $|P|$ and go to step (a).
+					\item If $|K| + |P'| > w$, then purge all the $P[p]$ such that $p$ is not in $P'$ and go to step $6$.
+				\end{itemize}
+			\end{enumerate}
+		\end{itemize}
+		
+		\item Return $K$ and $P$.
+		
+	\end{enumerate}
 
+\subsubsection{Check that winner coincides with the one in \Vote}\label{subsubsec:Final check}
+	This algorithm takes the couple of strings of integers $K$ and $P$ returned by module~\ref{subsubsec:Get winner} and checks if they coincide with the winner(s) specified in the relevant contract.
+	\begin{itemize}
+		\item Fetch the winner(s) from \Vote. Form a string with these numbers, call it $W$. 
+		\item If $|W| = |K|$, check that $W = K$. If not, produce an error.
+		\item If $W \geq K$, check that every entry of $W$ is in $K$ or in $P$. If not, produce an error.
+	\end{itemize}
 
-
+\printbibliography
 \end{document}
 
 
