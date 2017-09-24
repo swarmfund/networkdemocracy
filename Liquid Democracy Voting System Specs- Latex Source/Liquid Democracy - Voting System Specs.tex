@@ -88,7 +88,7 @@ name=Definition
 \section{Pre-existent solutions}\label{sec:Pre-existent solutions}
 	The need to define a voting system is not a new problem for the blockchain community. For instance, if some altcoin is going to hard fork, the developing team will often ask the user base to express a preference about which branch to adopt. It is obvious, then, that in a situation like this some kind of procedure has to be devised to allow people to express this preference, that is, to allow people to vote.
 	
-	One of the most common ways to deal with this problem is by issuing some voting tokens and creating two addresses that stand for \emph{yes} and \emph{no}. Every user receives a number of tokens equal to the number of coins owned and sends them to one of these two addresses, expressing a preference.
+	One of the most common ways to deal with this problem is by issuing some voting tokens and creating choice addresses (that may stand, for instance, for \emph{yes} and \emph{no}). Every user receives a number of tokens equal to the number of coins owned and sends them to one of these addresses, expressing a preference. The address with the highest number of tokens sent is the winner.
 	
 	Albeit very simple to implement, this method has many fundamental flaws that make it not suitable for a system that has democracy -- and hence voting -- at its center:
 	\begin{enumerate}	
@@ -100,11 +100,11 @@ name=Definition
 		
 		For instance, someone with a lot of real tokens could sell them all, and then use the voting tokens he retained to vote for a very bad decision for the platform. At this point the tokens he just sold will be depreciated because of this bad decision and the person will be able to buy them back at a fraction of the price, making a profit. 
 		
-		This means that a very powerful user on the platform could exploit the democratic infrastructure to make direct profits.
+		This means that a very powerful user on the platform could exploit its democratic infrastructure to make direct profits.
 		%
 		\item There is no reputation system. This means that a user voting power is only proportional to the amount of coins owned. A lot of important parameters (how active that user is on the platform, how much money one moves every month, how much that user helped with proposals, \dots) are completely disregarded.
 		%
-		\item Vote delegation is messy, or even not impossible.
+		\item Vote delegation is messy, or even not possible.
 	\end{enumerate}
 %
 	For these reasons we deemed necessary to steer away from all the pre-existing solutions and design an ad-hoc voting environment that is reasonably fair (according to social choice theory) and suitable to be used on a daily basis.
@@ -121,25 +121,25 @@ name=Definition
 		\vspace{-5pt}
 	\end{wrapfigure}
 %
-	The voting method we choose for the platform is \emph{range voting}. Range voting is one of the fairest voting systems available. In particular, being it a \emph{cardinal} and not an \emph{ordinal}\footnote{These are technical terms of voting theory. You can safely ignore them if you don't know what they mean.} voting system, many of the mathematical results about unfairness and dictatorship, such as~\cite{Arrow1951, Satterthwaite1975}, do not apply.
+	The voting method we choose for the platform is \emph{range voting}. Range voting is one of the fairest voting systems available. In particular, being it a \emph{cardinal} and not an \emph{ordinal}\footnote{These are technical terms of voting theory. You can safely ignore them if you don't know what they mean.} voting system, many of the mathematical results about unfairness and dictatorship, such as~\cite{Arrow1951, Satterthwaite1975}, do not apply. Note moreover that the results in~\cite{Gibbard1973}, albeit they apply, are mitigated from the fact that in our system after the voting window closes all the votes submitted become public (see Section~\ref{sec:Voting intuitive}), so any employment of strategic voting becomes detectable. This should be a good deterrent for people to cast sincere votes.
 	
 	In range voting, each voter can rank each choice giving a score, for instance from $0$ to $9$, where $0$ stands for ``I absolutely don't like this choice'' and $9$ stands for ``I absolutely love it'' (see for instance Figure\ref{fig:Ballot}). When the voting closes, the scores for each choice are summed, and the choice with more points is the one that wins.
 	
-	There are many groups that actively advocate for range voting to be adopted in electoral laws all around the world, and in addition to this range voting is also considerd one of the best voting procedure available in company administration (see, for instance~\cite{Electology, RangeVoting}). 
+	There are many groups that actively advocate for range voting to be adopted in electoral laws all around the world, and in addition to this range voting is also considered one of the best voting procedures available in company administration (see, for instance~\cite{Electology, RangeVoting}). 
 	
 	To conclude, in choosing the right voting procedure for the Swarm platform we consulted decades of research and study on voting systems to find the best alternative available, and we are fairly convinced that range voting is the one.
 %
 %	
 \subsection{Reputation}\label{subsec:Reputation}
 %
-	Taking into account ``modifiers of the voting power'' is also very easy when one adopts range voting. Let's suppose, for instance, that we want to have a system where the power of a voter is proportional to the number of coins he owns. If voter $A$ owns $n$ coins, then it will be sufficient to multiply by $n$ all the scores that $A$ gives to each candidate. So, for instance, if $A$ owns $10$ coins and ranks a candidate with a score of $5$, that candidate will receive $10*5=50$ points.
+	Taking into account ``modifiers of the voting power'' is also very easy when one adopts range voting. Let's suppose, for instance, that we want to have a system where the power of a voter is proportional to the number of coins he owns. If voter $A$ owns $n$ coins, then it will be sufficient to multiply by $n$ all the scores that $A$ gives to each candidate (or choice). So, for instance, if $A$ owns $10$ coins and ranks a candidate with a score of $5$, that candidate will receive $10*5=50$ points.
 	
 	To be precise, we want to take into account more parameters than just the quantity of money a voter has to determine the voting power, but now we do not need any new concept to do this. For each user $A$, we will just calculate a multiplier, denoted with $\rho_A$ and called \emph{reputation of $A$}, considering all the parameters that we deem relevant. Again, everything we will need to do to make $A$'s votes proportional to his reputation is to multiply all the scores that $A$ assigns by $\rho_A$.
 %
 %
 \subsection{Drafts}\label{subsec:Drafts}
 %
-	Clearly, it may happen that a vote leads to a draft. In range voting this means that there are two or more candidates at the top of the points list having the same score. For instance, imagine we have to elect three people for a company board and there are ten candidates, with their ranking in terms of points as follows:
+	Clearly, it may happen that a vote leads to a draft. In range voting this means that there are two or more candidates (choices) at the top of the points list having the same score. For instance, imagine we have to elect three people for a company board and that there are ten candidates, with their ranking in terms of points as follows:
 	\begin{center}
 	\begin{tabular}{| l | r |}
 		\hline
@@ -173,7 +173,7 @@ name=Definition
 \subsubsection{Desiderata}\label{subsubsec:Desiderata}
 	Now that we know what we want, we have to implement it. There are some fundamental desiderata we require:
 	\begin{itemize}
-		\item The voting should be transparent. This means that all the relevant information should be stored on the blockchain, and every user should be able to calculate the vote outcome independently, as well as to check that is preference was correctly submitted.
+		\item The voting should be transparent. This means that all the relevant information should be stored on the blockchain, and every user should be able to calculate the vote outcome independently, as well as to check that his preference was correctly submitted.
 		%
 		\item The voting should be encrypted. As we said in Section~\ref{sec:Pre-existent solutions}, one problem of voting on the blockchain is that people can know who is winning before the voting window closes. To avoid such a situation, every vote should be encrypted and readable only when the voting window closes.
 		%
@@ -181,16 +181,17 @@ name=Definition
 		%
 		\item The reputation should also be proportional to the amount of Swarm tokens owned. More specifically, if one owns zero Swarm tokens then his voting power should be zero (meaning that has no influence whatsoever).
 		%
-		\item Delegation must be possible. The word ``delegation'' is actually the reason why we talk about \emph{liquid democracy} and not just about \emph{deocracy}. The idea here is that any Swarm member can delegate some other member to vote in his place. This is particularly useful when someone is asked to take a decision, but does not feel to have enough experience or understanding to vote. Instead of wasting his preference, in such situation a user can delegate someone else to vote in his place.
+		\item Delegation must be possible. The word ``delegation'' is actually the reason why we talk about \emph{liquid democracy} and not just about democracy. The idea here is that any Swarm member can delegate some other member to vote in his place. This is particularly useful when someone is asked to take a decision, but does not feel to have enough experience or understanding to vote. Instead of wasting his preference, in such situation a user can delegate someone else to vote in his place.
+		
 		Imagine, for instance, that Bob is a Swarm user. Bob has to vote to elect members of the administration Board. He reads all the proposals and what every member wants to do, but it is all incredibly technical and out of his skill set. Bob, on the other hand, knows that Alice, a professional trader which he trusts, is on Swarm too. What Bob can do is delegating Alice to vote for him, so that his preference will not be wasted.		
 	\end{itemize}
 %
 %
 \subsubsection{User experience}\label{subsubsec:User experience}
 %
-	From the point of view of a Swarm user, voting should be simple. The idea is that you just visit a webpage, and use the ethereum address you have your tokens on as a login. At this point, you are able to see your reputation and all the open voting windows. To vote, it is sufficient to rank each candidate on the webpage and sign your preference with your private key. At this point, the preference is submitted. To improve easy of use, we are working to make such webpage compatible with Nano Ledger S and Trezor, so that signing your petition will just require a couple of clicks.
+	From the point of view of a Swarm user, voting should be simple. The idea is that you just visit a webpage, and use the ethereum address you have your tokens on as a login. At this point, you are able to see your reputation and all the open voting windows. To vote, it is sufficient to rank each candidate on the webpage and sign your preference with your private key. At this point, the preference is submitted. To improve easy of use, we are working to make such webpage compatible with Nano Ledger S and Trezor, so that signing your vote will just require a couple of clicks.
 	
-	When the voting window closes and the outcome is calculated, the user should will be able to see it on the very same web page.
+	When the voting window closes and the outcome is calculated, the user will be able to see it on the very same web page.
 %
 %
 \subsubsection{Voting phases}\label{subsubsec:Voting phases}
@@ -225,13 +226,13 @@ name=Definition
 %
 	During Phase II the actual voting happens, as follows:
 	\begin{itemize}
-		\item Phase II voting window opens. A smart contract called \Vote is created. It will contain information about all the candidates running for the election.
+		\item Phase II voting window opens. A smart contract called \Vote is activated. It will contain information about all the candidates (or choices) to be voted and the rules of the vote itself.
 		%
 		\item A Swarm trusted party\footnote{The Estonian non-profit, for instance} creates a couple of public/private keys. The private key is kept secret, while the public key is pushed into the \Vote contract.
 		%
 		\item Every user can see the open vote on the web page, with all the set of choices/candidates to rate. If Phase I was present, the set of candidates is automatically derived from the \Candidates smart contract. 
 		%
-		\item The user can vote as follows: He can rank each candidate giving him a score (from $-3$ to $3$, the default being $0$). He can moreover specify an ethereum address to delegate his vote to someone else. 
+		\item The user can vote as follows: He can rank each candidate giving him a score (the default parameters will be from $-3$ to $3$, the default being $0$). He can moreover specify an ethereum address to delegate his vote to someone else. 
 		
 		Note that these two things are not mutually excluding: If for some reason the delegation shouldn't work (for instance if your delegate forgets to vote), then the algorithm will immediately fall back on the scores the user gave. It makes sense then that you express a vote even when you specify a delegate to vote for you.
 		%
@@ -249,26 +250,25 @@ name=Definition
 			%
 			\item \Vote is decripted, and the outcome is calculated offline. This is still trustable since every user can repeat this procedure on his own computer (this functionality will be provided on the web page, and every user will be able to check that the outcome was calculated correctly with client-side).
 			%
-			\item First of all, the algorithm check for repeated votes, that is, users that submitted their vote more than once. This being the case, the algorithm just cancels all the submitted votes but the most recent one.
+			\item First of all, the algorithm checks that every voting preference is well formed.
 			%
-			\item After this, the algorithm checks that no vote comes from the Swarm foundation address, and this being the case, cancels that voting preference from the contract. This is for ethical reasons. In fact, Swarm founders could use the Swarm foundation to express a vote. Since the Swarm foundation holds 33\% of the total Swarm tokens, its would be so high to turn Swarm into a dictatorship. Swarm team members and partners are obviously still able to vote using their personal wallets, as any other member.
+			\item After this, the algorithm checks that no vote comes from the Swarm foundation address, and this being the case, it cancels that voting preference from the contract. This is for ethical reasons. In fact, Swarm founders could use the Swarm foundation to express a vote. Since the Swarm foundation holds 33\% of the total Swarm tokens, its reputation would be so high to turn Swarm into a dictatorship. Swarm team members and partners are obviously still able to vote using their personal wallets, as any other member does.
 			%
-			\item The algorithm pushes information into the \History contract, that registers how many times a user expressed a vote. This paramenter is used to calculate the reputation of a user, since it representative of the user activity and contribution to the platform
+			\item Then, the algorithm checks for repeated votes, that is, users that submitted their vote more than once. This being the case, the algorithm just cancels all the submitted votes but the most recent one.
 			%
-			\item The algorithm solves delegation errors. In fact, it may be that a user called Bob delegated Alice to vote for him, but Alice forgot to vote. It could also be that Bob delegated Alice, Alice delegated Charlie and Charlie delegated Bob. As you can see, this is a loop and it is difficult to say who is deciding for who. The algorithm addresses this situation falling back to the personal preferences. For instance, if Bob delegated Alice and Alice forgot to vote, then the algorithm uses the scores that Bob gave. In the worst case, Bob left everything as it was, meaning that he had scored $0$ every candidate.
+			\item The algorithm solves delegation errors. In fact, it may be that a user called Bob delegated Alice to vote for him, but Alice forgot to vote. It could also be that Bob delegated Alice, Alice delegated Charlie and Charlie delegated Bob. As you can see, this is a loop and it is difficult to say who is deciding for who. The algorithm addresses this situation falling back to the personal preferences. For instance, if Bob delegated Alice and Alice forgot to vote, then the algorithm uses the scores that Bob gave. In the worst case, Bob left everything as it was, meaning that he had scored $0$ every candidate ($0$ is the default ranking for every candidate if Bob doesn't change it).
 			%
-			\item The algorithm calculates the reputation of every voter. To do this, it checks how many tokens the voter holds, checks if there are more reputation modifiers referring to that user in the \History contract, and puts everything together. At this point two things can happen:
+			\item The algorithm calculates the reputation of every voter. To do this, it first checks how many tokens the voter holds. Then it follows the references on the \History contract, that registers all the votes that happened and can be used to keep track of how many times someone expressed a vote. This parameter is used to calculate the reputation of a user, since it representative of the user activity and contribution to the platform.
+			These two different pieces of information are combined to calculate the reputation. At this point two things can happen:
 			\begin{itemize}
 				\item If the user voted for himself, the algorithm multiplies the scores that the user gave by his reputation.
 				
 				\item If the user delegated someone else, the algorithm transfers the user reputation to that someone to calculate the scores.
 			\end{itemize}
 			%
-			\item Finally, the algorithm calculates the winning choice/candidate summing all the scores together. As we pointed out in Section~\ref{sec:Range voting}, if there are ex-aequo candidates then the algorithm checks who has the bigger reputation to calculate the winner\footnote{Note that if the voting is about choices and not candidates, this is not possible since choices do not correspond to single users and hence have no reputation. In this case this step is just skipped}. If this is not enough, the algorithm chooses between the winning alternatives pseudorandomly.
+			\item Finally, the algorithm calculates the winning choice/candidate summing all the scores together. As we pointed out in Section~\ref{sec:Range voting}, if there are ex-aequo candidates then the algorithm checks who has the bigger reputation to calculate the winner\footnote{Note that if the voting is about choices and not candidates, this is not possible since choices do not correspond to single users and hence have no reputation. In this case this step is just skipped.}. If this is not enough, the algorithm chooses between the winning alternatives pseudorandomly.
 			
-			Should be this the case, the user will receive a notification warning him: Since the final choice is pseudorandom, clearly the outcome calculated in locale may be different from the outcome calculated by Swarm team.
-			
-			\item The Swarm team publishes the result of the vote, that is displayed in the user web page. As we said, the user can independently check that the outcome has been calculated correctly.
+			\item The Swarm team publishes the result of the vote, attaching it to the \Vote contract. As we said, the user can independently check that the outcome has been calculated correctly confronting his offline calculation with the one published.
 		\end{itemize}
 %
 %
@@ -280,21 +280,24 @@ name=Definition
 \subsection{Definitions}\label{subsec:Definitions}
 %
 	\begin{definition}
-		A \emph{string} $s$ is a finite sequence of characters or digits $s_1 s_2 \cdots s_n$. If $s$ is a string, we will denote with $s[n]$ the \emph{n-th} character of $s$, and with $|s|$ the \emph{length} of $s$. We will abuse this notation and we will often use \emph{strings of strings}, that is, some string $s$ such that $s[n]$, for some $n$, is a string too. In this case, we will denote with $s[n][m]$ the $m$-th entry of the $n$-th entry of $s$.
+		A \emph{string} $s$ is a finite sequence of entities (integers, chars, strings) $s_1 s_2 \cdots s_n$. If $s$ is a string, we will denote with $s[n]$ the \emph{n-th} entry of $s$, and with $|s|$ the \emph{length} of $s$ (number of entries). We will deal with \emph{strings of strings}, that is, some string $s$ such that $s[n]$, for some $n$, is a string too. In this case, we will denote with $s[n][m]$ the $m$-th entry of the $n$-th entry of $s$.
 		
 		If $s$ is a string of numbers and $k$ is a number as well, then $k*s$ is the string $(ks[1], \dots, ks[|s|])$.
 	\end{definition}	
+		We will use indifferently the words \emph{add} and \emph{append} to mean ``adding entries to a string''. We will use the word \emph{purge} or \emph{erase} to mean ``removing an entry from a string''. We will use the word \emph{set} to mean ``changing the value of an entry in a string''.
+
+		Our strings will often have dynamic length, meaning that the number of possible entries they contain is not fixed. This is sometimes called \emph{list} in coding jargon.
 %	
 	\begin{definition}\label{def:candidates and range}
 		We will denote with \candidates the \emph{ordered} set of candidates or choices that can be voted for in a given vote. We will denote with \range the set of possible scores a user can assign to each candidate. For instance, if we have three possible choices $A,B,C$ and the range of possible scores goes from $-3$ to $3$, then $\candidates := \{A, B, C\}$ and $\range := \{-3,-2,-1,0,1,2,3\}$. We will moreover denote with $| \candidates|$ and $|\range|$ the number of elements that these two sets have. In our example, $|\candidates | = 3$ and $|\range|=7$.
 	\end{definition}
 %	
 	\begin{definition}\label{def:voting string}		
-		We can express the voting of a user as a string $(a,b,c, \dots)$, where $a,b,c \in \range$. $a$ represents the rating given to candidate $A$, $b$ the rating given to candidate $B$ and $c$ the rating given to candidate $C$ and so on. This string is called \emph{preference string}, and its length is clearly equal to $|\candidates|$.
+		We can express the voting of a user as a string $(a,b,c, \dots)$, where $a,b,c \in \range$. $a$ represents the rating given to candidate $A$, $b$ the rating given to candidate $B$, $c$ the rating given to candidate $C$ and so on. This formalization is non-ambiguous because we supposed $\candidates$ to be ordered. This string is called \emph{preference string}, and its length is clearly equal to $|\candidates|$.
 	\end{definition}
 %
 	\begin{definition}
- 		We denote an user $A$ delegating his/her vote to a user $B$ with $A \to B$.
+ 		We denote a user $A$ delegating his/her vote to a user $B$ with $A \to B$.
 	\end{definition}
 %
 %
@@ -330,7 +333,7 @@ Here we highlight the fundamental pieces of information that will be specified i
 	
 	The \Candidates contract addresses the voting of the first kind, allowing users to add their candidature in it. The \Choices contract is used for the votes of the second kind, and contains the set of choices the users will be able to vote. 
 	
-	Note that since a vote can have or not have a Phase I, these two contract are \emph{mutually eclusive}: A voting relies on a \Candidates contract or on a \Choices contract, but not on both at the same time.
+	Note that since a vote can have or not have a Phase I, these two contracts are \emph{mutually eclusive}: A voting relies on a \Candidates contract or on a \Choices contract, but not on both at the same time.
 	
 	As in the previous case, in every \Choices contract there will be a reference to the correspondent \Vote contract, on which the preferences of the users will be registered. This piece of information is specified when the contract is created and allows the user to reconstruct where he has to send his preferences once the voting window opens.
 	
@@ -349,7 +352,7 @@ Here we highlight the fundamental pieces of information that will be specified i
 \subsubsection{The \Vote contract}
 	The data in the \Vote contract is of different kinds, as follows:
 	\begin{description}
-		\item[Secret key:] This is specified in the contract when it is created. It is a RSA (or similar) secret key, denoted with \emph{pub} and generated by a Swarm trusted party.
+		\item[Public key:] This is specified in the contract when it is created. It is a RSA (or similar) public key, denoted with \emph{pub} and generated by a Swarm trusted party.
 			
 		\item[Instructions:] These are again specified when the contract is created, and are used to calculate the voting outcome. They consist of two parameters: an integer, representing the number of choices that have to be declared as winners (for instance, ``the three best candidates have to be picked''), and the range of possible values used for range voting, denoted with $\range$ (for instance $\{-3,-2,-1,0,1,2,3\}$\footnote{By definition, we require $0$ to be always present in the range, and the range to be symmetric, meaning that the values can go from $-x$ to $x$, for some integer $x$.}).
 		%
@@ -373,7 +376,7 @@ Here we highlight the fundamental pieces of information that will be specified i
 		
 		\item[Secret key:] This is added to the contract by the same trusted party that generated \emph{pub} after the voting window closes. This secret key, denoted with \emph{sec}, allows to decrypt the encripted block.
 		
-		\item[Plain block:] This is just the encrypted block itself, decrypted with \emph{sec} and purged of incorrect specifications and delegation loops, according to module~\ref{subsubsec:Get plain block}. It will be added to the contract by a Swarm tusted party after the voting window closes.
+		\item[Plain block:] This is just the encrypted block itself, decrypted with \emph{sec} and purged of incorrect specifications and delegation loops, according to module~\ref{subsubsec:Decrypt block}. It will be added to the contract by a Swarm tusted party after the voting window closes.
 			
 		\item[Winner:] The list of winner(s) of the election, again added to the contract by a Swarm trusted party when the voting window closes. This is just a list of numbers bigger or equal to $1$, referencing to the \Candidates or \Choices contract. If this list is, for instance, $(3,6,2)$, this means that the 3\textsuperscript{rd}, the 6\textsuperscript{th} and the 2\textsuperscript{nd} candidate (choice) listed on \Candidates (\Choices) are the ones who won. 
 		
@@ -382,7 +385,7 @@ Here we highlight the fundamental pieces of information that will be specified i
 	\end{description}
 	This contract is very simple. It is just a big database, with an encrypted and a plain text part. The only real computation that the database does is checking if the user can or cannot add a voting string to it verifying if the voting window is open or not and, in a latter stage, authorizing only the Swarm trusted party to add information to it.
 
-	\textbf{Note}: On the user web page, before any preference is specified, vote strings and delegation addresses are set to the defaults values of $0$ for $v[3]$ and $(0,0, \dots, 0)$ for $v[2]$. In this way, if the user submits his vote without specifying any preference, its vote will still be submitted as well formatted.
+	\textbf{Note}: On the user web page, before any preference is specified, vote strings and delegation addresses are set to the default values of $0$ for $v[3]$ and $(0,0, \dots, 0)$ for $v[2]$. In this way, if the user submits his vote without specifying any preference, its vote will still be submitted as well formatted.
 		
 	\textbf{Note}: The reason why the plain block is added to the contract is to make the outcome verification process faster. On the user web page, in fact, the user will have the possibility to check independently the outcome of a vote. To do this, some code will be run client-side. The user will be able to select between three modes:
 	\begin{itemize}
@@ -390,7 +393,7 @@ Here we highlight the fundamental pieces of information that will be specified i
 		
 		\item A ``fast'' option that skips the first part, and just uses the plain block provided on the \Vote contract to calculate the outcome. This will undoubtably be faster, since all the decryption and purging will be skipped.
 		
-		\item A ``paranoid'' option that works as the ``thorough'', with the exception that now module~\ref{subsubsec:Get reputation for every user} does not use the plain block of previous contracts to calculate reputations, but invokes module~\ref{subsubsec:Get decrypted block} every time. This will require \textbf{a lot} of decryption and purging, and will probably be very very slow to run. On the other hand, here \textbf{every} step of the calculation is executed locally, and nothing is given for granted.
+		\item A ``paranoid'' option that works as the ``thorough'' one, with the exception that now module~\ref{subsubsec:Get reputation for every user} does not use the plain block of previous contracts to calculate reputations, but invokes module~\ref{subsubsec:Get decrypted block} every time. This will require \textbf{a lot} of decryption and purging, and will probably be very very slow to run. On the other hand, here \textbf{every} step of the calculation is executed locally, and nothing is given for granted.
 	\end{itemize} 
 %
 %
@@ -416,7 +419,7 @@ Here we highlight the fundamental pieces of information that will be specified i
 	\begin{itemize}
 		\item Scroll the \History contract and follow the references, building a history of voting contracts. Every reference also gives the relevant time window for a given contract, that then can be displayed as open or closed on the user web page.
 		
-		\item When the user clicks on a given vote, fetch from an independent server all the relevant information. Verify that the hashes are correct on the correspondent \Candidates or \Choices contract.
+		\item When the user clicks on a given vote, fetch from an independent server all the relevant information. Verify that the hashes are correct on the corresponding \Candidates or \Choices contract.
 		
 		\item At this point, depending on the time window, a user will be able to vote, run for an election or verify the outcome of a vote. Again, Following the reference on the corresponding \Candidates and \Choices contracts, the user will be able to know which \Vote contract has to be consulted to manipulate this information.
 		
@@ -447,7 +450,7 @@ Here we highlight the fundamental pieces of information that will be specified i
 \subsubsection{Get decrypted block}\label{subsubsec:Get decrypted block}
 	This is the algorithm to decrypt the encrypted block in a \Vote contract and purge it by any kind of error.
 	\begin{itemize}
-		\item Use the secret key in \Vote to decrypt the encrypted block. Get a list of decrypted entries called \Vote' back. (module~\ref{subsubsec:Decrypt block}).
+		\item Use the secret key in \Vote to decrypt the encrypted block. If the key is not available yet, produce an error. If it is, get a list of decrypted entries called \Vote' back. (module~\ref{subsubsec:Decrypt block}).
 		\item Check that every string in \Vote' is well-formed (module~\ref{subsubsec:Check that every string is well formed}).
 		\item Ban the Swarm foundation address (module~\ref{subsubsec:Ban foundation address}).
 		\item Delete repeated votes (module~\ref{subsubsec:Delete repeated votes}).
@@ -488,8 +491,8 @@ Finally, check that the output result coincides with the one in $\Vote$ (module~
 \subsubsection{Decrypt block}\label{subsubsec:Decrypt block}
 This module just uses the the secret key \emph{sec} in \Vote to decrypt the encrypted block.
 	\begin{itemize}
-		\item Fetch \emph{sec} from \Vote.
-		\item Fetch the encrypted block from \Vote. Copy it to a file \Vote'.
+		\item Fetch \emph{sec} from \Vote. If not available, produce an error.
+		\item Fetch the encrypted block from \Vote. If voting window is still open, produce an error. Copy it to a file \Vote'.
 		\item Denote with $\Vote'[n]$ each entry in \Vote'. Decrypt it:
 		\begin{itemize}
 			\item If $\Vote'[n]$ doesn't decrypt for some $n$ (probably it has been encrypted with the wrong public key), delete it.
@@ -520,7 +523,7 @@ This module just uses the the secret key \emph{sec} in \Vote to decrypt the encr
 		\item Scroll \Vote': Each entry $\Vote'[n]$ Will be a voting string $s$. Start from $\Vote'[1]$.	
 		\item If $\Vote'[n][1]$ is the Swarm foundation address, delete the entry.
 		\item Keep going: $n = n+1$. 
-		\item Eventually the bottom of \Vote' is reached and the voting string coming from Swarm foundation address is purged.
+		\item Eventually the bottom of \Vote' is reached and any voting string coming from Swarm foundation address is purged.
 		\item Return \Vote'.
 	\end{itemize}	
 
@@ -530,7 +533,7 @@ This module just uses the the secret key \emph{sec} in \Vote to decrypt the encr
 	\begin{enumerate}
 		\item Denote with $N$ the number of entries in $\Vote'$. Scroll \Vote' bottom up, starting from $\Vote'[N]$.
 		\item  For $n$ going from $N-1$ to $1$, check if $\Vote'[n][1] = \Vote[N][1]$.
-		\item If yes, delete $\Vote'[n][1]$. Otherwise keep going.
+		\item If yes, purge $\Vote'[n]$. Otherwise keep going.
 		\item $n = n-1$.		
 		\item When the for loop ends, we know that there are no addresses $m$ such that $\Vote[N][1] = \Vote[m][1]$, aside for the case $m=N$.
 		\item Set $N = N-1$ start again from step 2.
@@ -543,7 +546,7 @@ This module just uses the the secret key \emph{sec} in \Vote to decrypt the encr
 	This algorithm takes care of situations like $A \to B$, but $B$ did not submit a vote. In this case the algorithm de-activates the delegation to $B$ and falls back to $A$'s preferences.
 	\begin{enumerate}
 		\item Denote with $N$ the number of entries in $\Vote'$. Scroll \Vote' from top to bottom, starting from $n=1$.
-		\item If $\Vote'[n][3]=0$, then no delegation has been specified, go to step 6.
+		\item If $\Vote'[n][3]=0$, then no delegation has been specified, go to step 6. Otherwise:
 		\item For each $m$, check if $\Vote'[n][3] = \Vote'[m][1]$.
 		\item If there is one such $n$, then the delegation is well formed, skip.
 		\item If not, then the delegate didn't vote. Set $\Vote'[n][3] = 0$.
@@ -561,7 +564,7 @@ This module just uses the the secret key \emph{sec} in \Vote to decrypt the encr
 		\begin{enumerate}
 			\item The first entry of \emph{check} is $n_0=n$.
 			
-			\item If $\Vote'[n_0][3]$ is $0$ then delegation was not set for $n_0$. Go to step $4$.
+			\item If $\Vote'[n_0][3]$ is $0$ then delegation was not set for $n_0$. Go to step $3$.
 
 			\item If not, we scroll \Vote' until we find an $n_1$ such that $\Vote'[n_1][1] = \Vote'[n_0][3]$. We are sure this $n_1$ exists if we get rid of hanging delegations using module~\ref{subsubsec:Get rid of hanging delegations} before running this algorithm. We add $n_1$ to \emph{check}.
 			
@@ -578,13 +581,13 @@ This module just uses the the secret key \emph{sec} in \Vote to decrypt the encr
 				\[
 				\Vote'[\emph{check}[i+1]][3]=\Vote'[\emph{check}[i+2]][3] = \dots = \Vote'[\emph{check}[|\emph{check}|]][3]=0
 				\]
-				If this is the case, we solved the problem and return to step $4$.
+				If this is the case, we solved the problem and return to step $3$.
 			
 				\item If we don't find a repeated entry, then we go back to step (b) using $n_1$ in place of $n_0$ and $n_2$ in place of $n_1$. At every iteration, the $n_i$s that we are using in step (b) will be incremented to $n_{i+1}$. 
 				
 				At some point, we either find a repetition, or that $n_{i+1} = 0$ for some $i$. This is again guaranteed by the application of module~\ref{subsubsec:Get rid of hanging delegations} before running this algorithm.
 				
-				In any case, this loop will terminate at some point. when this happens, we are guaranteed that the line $\Vote[n_0]$ doesn't lead to a delegation loop (if it did, we got rid of it).
+				In any case, this loop will terminate at some point. When this happens, we are guaranteed that the line $\Vote[n_0]$ doesn't lead to a delegation loop (if it did, we got rid of it).
 			\end{itemize} 
 		\end{enumerate}
 		\item Set $n = n+1$. Go to step 2.
@@ -605,7 +608,7 @@ This module just uses the the secret key \emph{sec} in \Vote to decrypt the encr
 		
 		\item Scroll \Vote' from top to bottom, starting from $n=1$.
 	
-		\item if $\Vote'[n][3]=0$, go to step $5$.
+		\item if $\Vote'[n][3]=0$, go to step $7$.
 	
 		\item if $\Vote'[n][3]!=0$, then it is some ethereum address (we can be sure about this if we applied module~\ref{subsubsec:Check that every string is well formed} before running this algorithm). We follow the delegation three. Set $n_0=n$:
 		\begin{itemize}
@@ -619,10 +622,10 @@ This module just uses the the secret key \emph{sec} in \Vote to decrypt the encr
 			
 			\item Set $\Vote'[n_0][3]$ to $0$ (We read the delegation information, so now we discard it).
 			
-			\item Consider $\Vote'[n_1][3]$. If it is $0$, then $\emph{weights}[n_1] = T$ and go to step $5$. 
+			\item Consider $\Vote'[n_1][3]$. If it is $0$, then $\emph{weights}[n_1] = T$ and go to step $7$. 
 			
 			Otherwise, find again a $n_2$ such that $\Vote'[n_2][1] = \Vote'[n_1][3]$; then set $\Vote'[n_2][2] = 0$, $\Vote'[n_1][3] = 0$ and $T = T + \rho_{n_1}$. Reiterate this step until 
-			you find an $n_i$ such that $\Vote'[n_i][3]=0$. Then go to step $5$.
+			you find an $n_i$ such that $\Vote'[n_i][3]=0$. Then go to step $7$.
 			
 			\textbf{Note}: To be guaranteed that at some point you will find some $n_i$ such that $\Vote'[n_i][3]=0$, and thus that this loop terminates, it is fundamental to apply modules~\ref{subsubsec:Get rid of hanging delegations} and~\ref{subsubsec:Get rid of delegation loops} before applying the algorithm described here.
 		\end{itemize}
@@ -633,7 +636,7 @@ This module just uses the the secret key \emph{sec} in \Vote to decrypt the encr
 	
 		\item Again, scroll \Vote' from top to bottom, starting from $n=1$.
 	
-		\item For each $n$, have $\emph{weights}[n] = \emph{weights}[N] + \rho_n$.
+		\item For each $n$, have $\emph{weights}[n] = \emph{weights}[n] + \rho_n$.
 	
 		\item Finally, for each $n$ set $\Vote'[n][2] = \emph{weights}[n] \Vote'[n][2]$. Note that the right hand side of this assignment is a multiplication of a string ($\Vote'[n][2]$) by a scalar ($ \emph{weights}[n]$).
 		
@@ -644,7 +647,7 @@ This module just uses the the secret key \emph{sec} in \Vote to decrypt the encr
 
 
 \subsubsection{Get reputation for every user}\label{subsubsec:Get reputation for every user}
-	This algorithm calculates the reputation of every user showing up in the vote. After this, it multiply all the scores by the given reputation. Reputation is made of two components: The amount of tokens held and the activity on the platform, measured considering how many times the user voted or ran for an election. These two parameters are measured with respect to the time when the voting window closed.
+	This algorithm calculates the reputation of every user showing up in the vote. After this, it multiplies all the scores by the given reputation. Reputation is made of two components: The amount of tokens held and the activity on the platform, measured considering how many times the user voted or ran for an election. These two parameters are measured with respect to the time when the voting window closed.
 	\begin{itemize}
 		\item Given an eth address $h$ and a date $d$ go to the token contract snapshot corresponding to that date and check how many tokens are in the $h$ wallet.
 		
@@ -682,7 +685,7 @@ This module just uses the the secret key \emph{sec} in \Vote to decrypt the encr
 	This algorithm sums all the scores in a list of strings \Vote' and picks the best ones as prescribed by the instructions on the \Vote contract. It returns two arrays of numbers: The first represents the sure winner(s), the second represent the remaining winner in case pseudorandom selection is needed.
 	
 	\begin{enumerate}
-		\item Denote with $N$ the length of \Vote'. Calculate $S := \sum_{n=1}^N \Vote'[n][2]$, where with $\sum$ we are denoting the component-wise sum of strings of numbers.
+		\item Denote with $N$ the length of \Vote'. Calculate $S := \sum_{n=1}^N \Vote'[n][2]$, where with $\sum$ we are denoting the component-wise sum of strings of numbers of equal length.
 		
 		\item Initialize two empty strings, call them $K$ and $P$. They represent the set of winner(s) and the set of possible winner(s) that will have to be pseudorandomly chosen, respectively. Note that $P$ may be empty.
 		
