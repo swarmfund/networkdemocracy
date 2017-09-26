@@ -85,7 +85,7 @@ name=Definition
 		Here we highlight how the voting system is going to work. We will start briefly reviewing existent solutions, we will proceed sketching the general idea for the voting system on the Swarm Platform and, finally, we will dive into details producing a working algorithm.
 	\end{abstract}
 
-\section{Pre-existent solutions}\label{sec:Pre-existent solutions}
+\section{Preexistent solutions}\label{sec:Preexistent solutions}
 	The need to define a voting system is not a new problem for the blockchain community. For instance, if some altcoin is going to hard fork, the developing team will often ask the user base to express a preference about which branch to adopt. It is obvious, then, that in a situation like this some kind of procedure has to be devised to allow people to express this preference, that is, to allow people to vote.
 	
 	One of the most common ways to deal with this problem is by issuing some voting tokens and creating choice addresses (that may stand, for instance, for \emph{yes} and \emph{no}). Every user receives a number of tokens equal to the number of coins owned and sends them to one of these addresses, expressing a preference. The address with the highest number of tokens sent is the winner.
@@ -107,7 +107,7 @@ name=Definition
 		\item Vote delegation is messy, or even not possible.
 	\end{enumerate}
 %
-	For these reasons we deemed necessary to steer away from all the pre-existing solutions and design an ad-hoc voting environment that is reasonably fair (according to social choice theory) and suitable to be used on a daily basis.
+	For these reasons we deemed necessary to steer away from all the preexisting solutions and design an ad-hoc voting environment that is reasonably fair (according to social choice theory) and suitable to be used on a daily basis.
 %
 %
 \section{Range Voting}\label{sec:Range voting}
@@ -175,7 +175,7 @@ name=Definition
 	\begin{itemize}
 		\item The voting should be transparent. This means that all the relevant information should be stored on the blockchain, and every user should be able to calculate the vote outcome independently, as well as to check that his preference was correctly submitted.
 		%
-		\item The voting should be encrypted. As we said in Section~\ref{sec:Pre-existent solutions}, one problem of voting on the blockchain is that people can know who is winning before the voting window closes. To avoid such a situation, every vote should be encrypted and readable only when the voting window closes.
+		\item The voting should be encrypted. As we said in Section~\ref{sec:Preexistent solutions}, one problem of voting on the blockchain is that people can know who is winning before the voting window closes. To avoid such a situation, every vote should be encrypted and readable only when the voting window closes.
 		%
 		\item Being an active member of the Swarm democracy should increase a member reputation. Swarm values participation, and it makes sense that ``the more you vote, the more your vote becomes powerful''. This is also a way to value the experience and time spent on the platform.
 		%
@@ -248,7 +248,7 @@ name=Definition
 		\begin{itemize}	
 			\item Shortly after the Phase voting window closes, the Swarm trusted party appends the secret key that was generated in the previous phase to \Vote. At this point, all the information contained in \Vote becomes accessible to everyone.
 			%
-			\item \Vote is decripted, and the outcome is calculated offline. This is still trustable since every user can repeat this procedure on his own computer (this functionality will be provided on the web page, and every user will be able to check that the outcome was calculated correctly with client-side).
+			\item \Vote is decrypted, and the outcome is calculated offline. This is still trustable since every user can repeat this procedure on his own computer (this functionality will be provided on the web page, and every user will be able to check that the outcome was calculated correctly with client-side).
 			%
 			\item First of all, the algorithm checks that every voting preference is well formed.
 			%
@@ -333,7 +333,7 @@ Here we highlight the fundamental pieces of information that will be specified i
 	
 	The \Candidates contract addresses the voting of the first kind, allowing users to add their candidature in it. The \Choices contract is used for the votes of the second kind, and contains the set of choices the users will be able to vote. 
 	
-	Note that since a vote can have or not have a Phase I, these two contracts are \emph{mutually eclusive}: A voting relies on a \Candidates contract or on a \Choices contract, but not on both at the same time.
+	Note that since a vote can have or not have a Phase I, these two contracts are \emph{mutually exclusive}: A voting relies on a \Candidates contract or on a \Choices contract, but not on both at the same time.
 	
 	As in the previous case, in every \Choices contract there will be a reference to the correspondent \Vote contract, on which the preferences of the users will be registered. This piece of information is specified when the contract is created and allows the user to reconstruct where he has to send his preferences once the voting window opens.
 	
@@ -374,9 +374,9 @@ Here we highlight the fundamental pieces of information that will be specified i
 		
 		When the voting window closes, the users will not be able to add more strings to the contract. The list of all the encrypted strings as above will be called \emph{encrypted block}.
 		
-		\item[Secret key:] This is added to the contract by the same trusted party that generated \emph{pub} after the voting window closes. This secret key, denoted with \emph{sec}, allows to decrypt the encripted block.
+		\item[Secret key:] This is added to the contract by the same trusted party that generated \emph{pub} after the voting window closes. This secret key, denoted with \emph{sec}, allows to decrypt the encrypted block.
 		
-		\item[Plain block:] This is just the encrypted block itself, decrypted with \emph{sec} and purged of incorrect specifications and delegation loops, according to module~\ref{subsubsec:Decrypt block}. It will be added to the contract by a Swarm tusted party after the voting window closes.
+		\item[Plain block:] This is just the encrypted block itself, decrypted with \emph{sec} and purged of incorrect specifications and delegation loops, according to module~\ref{subsubsec:Decrypt block}. It will be added to the contract by a Swarm trusted party after the voting window closes.
 			
 		\item[Winner:] The list of winner(s) of the election, again added to the contract by a Swarm trusted party when the voting window closes. This is just a list of numbers bigger or equal to $1$, referencing to the \Candidates or \Choices contract. If this list is, for instance, $(3,6,2)$, this means that the 3\textsuperscript{rd}, the 6\textsuperscript{th} and the 2\textsuperscript{nd} candidate (choice) listed on \Candidates (\Choices) are the ones who won. 
 		
@@ -543,7 +543,7 @@ This module just uses the the secret key \emph{sec} in \Vote to decrypt the encr
 
 
 \subsubsection{Get rid of hanging delegations}\label{subsubsec:Get rid of hanging delegations}
-	This algorithm takes care of situations like $A \to B$, but $B$ did not submit a vote. In this case the algorithm de-activates the delegation to $B$ and falls back to $A$'s preferences.
+	This algorithm takes care of situations like $A \to B$, but $B$ did not submit a vote. In this case the algorithm deactivates the delegation to $B$ and falls back to $A$'s preferences.
 	\begin{enumerate}
 		\item Denote with $N$ the number of entries in $\Vote'$. Scroll \Vote' from top to bottom, starting from $n=1$.
 		\item If $\Vote'[n][3]=0$, then no delegation has been specified, go to step 6. Otherwise:
@@ -577,7 +577,7 @@ This module just uses the the secret key \emph{sec} in \Vote to decrypt the encr
 			\Vote'[n_0][1] \to \Vote'[n_1][1] \to \dots \to \Vote'[n_i][1] \to \dots \to \Vote'[n_i][1]
 			\]
 			\begin{itemize}
-				\item Suppose we find a repeated entry, say $n_i$. The first occurence of $n_i$ will be at entry $i+1$ in \emph{Check}. For instance, if $\emph{Check}:=\{1,6,2,8,21,2\}$, then $i=3$. We get rid of the delegation loop just setting 
+				\item Suppose we find a repeated entry, say $n_i$. The first occurrence of $n_i$ will be at entry $i+1$ in \emph{Check}. For instance, if $\emph{Check}:=\{1,6,2,8,21,2\}$, then $i=3$. We get rid of the delegation loop just setting 
 				\[
 				\Vote'[\emph{check}[i+1]][3]=\Vote'[\emph{check}[i+2]][3] = \dots = \Vote'[\emph{check}[|\emph{check}|]][3]=0
 				\]
@@ -669,7 +669,7 @@ This module just uses the the secret key \emph{sec} in \Vote to decrypt the encr
 			
 			\item[Slow mode] For each of such contracts, decrypt the encrypted block using module~\ref{subsubsec:Decrypt block}. Then check if there is any voting string $n$ such that $n[1]=h$. If yes, set $\eta_{h} = \eta_{h}+1$.
 			
-			\textbf{Note:} As time progressess, the Slow mode will become increasingly slow, since the quantity of votes to decrypt will grow at least linearly.
+			\textbf{Note:} As time progresses, the Slow mode will become increasingly slow, since the quantity of votes to decrypt will grow at least linearly.
 		\end{description}
 
 		\item Now, corresponding to $h$, we have three parameters: $\sigma_h$, the amount of tokens held. $\eta_h$, the number of votes to which $h$ took part in, and $\gamma_h$, the number of times $h$ run for an election. The reputation is calculated as:
